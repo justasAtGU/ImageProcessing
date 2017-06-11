@@ -1,0 +1,10 @@
+//
+// Created by Eric Lei on 5/29/17.
+//
+
+#ifndef IMAGEPROCESSING_GAUSSIANBLUR_H
+#define IMAGEPROCESSING_GAUSSIANBLUR_H
+
+int gaussBlur();
+
+#endif //IMAGEPROCESSING_GAUSSIANBLUR_H
