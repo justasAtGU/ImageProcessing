@@ -150,32 +150,32 @@ main.c.s:
 	$(MAKE) -f CMakeFiles/ImageProcessing.dir/build.make CMakeFiles/ImageProcessing.dir/main.c.s
 .PHONY : main.c.s
 
-sources/gaussianBlur.o: sources/gaussianBlur.c.o
+sources/pgma.o: sources/pgma.c.o
 
-.PHONY : sources/gaussianBlur.o
+.PHONY : sources/pgma.o
 
 # target to build an object file
-sources/gaussianBlur.c.o:
-	$(MAKE) -f CMakeFiles/ImageProcessing.dir/build.make CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o
-.PHONY : sources/gaussianBlur.c.o
+sources/pgma.c.o:
+	$(MAKE) -f CMakeFiles/ImageProcessing.dir/build.make CMakeFiles/ImageProcessing.dir/sources/pgma.c.o
+.PHONY : sources/pgma.c.o
 
-sources/gaussianBlur.i: sources/gaussianBlur.c.i
+sources/pgma.i: sources/pgma.c.i
 
-.PHONY : sources/gaussianBlur.i
+.PHONY : sources/pgma.i
 
 # target to preprocess a source file
-sources/gaussianBlur.c.i:
-	$(MAKE) -f CMakeFiles/ImageProcessing.dir/build.make CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.i
-.PHONY : sources/gaussianBlur.c.i
+sources/pgma.c.i:
+	$(MAKE) -f CMakeFiles/ImageProcessing.dir/build.make CMakeFiles/ImageProcessing.dir/sources/pgma.c.i
+.PHONY : sources/pgma.c.i
 
-sources/gaussianBlur.s: sources/gaussianBlur.c.s
+sources/pgma.s: sources/pgma.c.s
 
-.PHONY : sources/gaussianBlur.s
+.PHONY : sources/pgma.s
 
 # target to generate assembly for a file
-sources/gaussianBlur.c.s:
-	$(MAKE) -f CMakeFiles/ImageProcessing.dir/build.make CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.s
-.PHONY : sources/gaussianBlur.c.s
+sources/pgma.c.s:
+	$(MAKE) -f CMakeFiles/ImageProcessing.dir/build.make CMakeFiles/ImageProcessing.dir/sources/pgma.c.s
+.PHONY : sources/pgma.c.s
 
 sources/preproc.o: sources/preproc.c.o
 
@@ -216,9 +216,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... sources/gaussianBlur.o"
-	@echo "... sources/gaussianBlur.i"
-	@echo "... sources/gaussianBlur.s"
+	@echo "... sources/pgma.o"
+	@echo "... sources/pgma.i"
+	@echo "... sources/pgma.s"
 	@echo "... sources/preproc.o"
 	@echo "... sources/preproc.i"
 	@echo "... sources/preproc.s"

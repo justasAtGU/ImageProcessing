@@ -3,34 +3,10 @@
 #include "includes/lodepng.h"
 #include "sources/lodepng.c"
 #include "includes/preproc.h"
+#include "includes/pgma.h"
 
-#define IMAGE "../images/lion.png"
-#define NEWIMAGE "../imagesNew/lion.png"
-
-void encodeOneStep(const char* filename, const unsigned char* image, unsigned width, unsigned height);
-void decodeOneStep(const char* filename);
-
-/**
- * Takes png image in same directory, gets raw pixel data, and performs gaussBlur()
- * on it.
- */
-void decodeOneStep(const char* filename)
-{
-    unsigned error;
-    unsigned char* image; //will point to first (upper left) pixel after png decode
-    unsigned width, height;
-
-    error = lodepng_decode32_file(&image, &width, &height, filename);
-    if(error) printf("error %u: %s\n", error, lodepng_error_text(error));
-
-    /* Perform image processing here********************************************/
-    grayscale(image, width, height);
-
-    /****************************************************************************/
-
-    encodeOneStep(NEWIMAGE, image, width, height); /*save image to new image in /imagesNew directory*/
-    free(image);
-}
+#define IMAGE "../images/street.png" //preprocessed image (PNG format)
+#define OUTIMAGE "../imagesNew/street1.pgm" //postprocessed image (PGM format)
 
 void encodeOneStep(const char* filename, const unsigned char* image, unsigned width, unsigned height)
 {
@@ -46,8 +22,19 @@ void encodeOneStep(const char* filename, const unsigned char* image, unsigned wi
 
 int main()
 {
-    //const char* filename = "../images/flag.png";
-    decodeOneStep(IMAGE);
+    unsigned error;
+    unsigned char* image; //will point to first (upper left) pixel after png decode
+    unsigned width, height;
+
+    error = lodepng_decode32_file(&image, &width, &height, IMAGE);
+    if(error) printf("error %u: %s\n", error, lodepng_error_text(error));
+
+    /* Perform image processing here********************************************/
+    grayscale(image, width, height);
+    /****************************************************************************/
+
+    encodePGM(OUTIMAGE, image, width, height); /*save image to new image in /imagesNew directory*/
+    free(image);
 
     return 0;
 }

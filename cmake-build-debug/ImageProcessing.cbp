@@ -82,7 +82,7 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/ericlei/Documents/ImageProcessing/includes/gaussianBlur.h">
+		<Unit filename="/Users/ericlei/Documents/ImageProcessing/includes/pgma.h">
 			<Option target="ImageProcessing"/>
 		</Unit>
 		<Unit filename="/Users/ericlei/Documents/ImageProcessing/includes/preproc.h">
@@ -91,7 +91,7 @@
 		<Unit filename="/Users/ericlei/Documents/ImageProcessing/main.c">
 			<Option target="ImageProcessing"/>
 		</Unit>
-		<Unit filename="/Users/ericlei/Documents/ImageProcessing/sources/gaussianBlur.c">
+		<Unit filename="/Users/ericlei/Documents/ImageProcessing/sources/pgma.c">
 			<Option target="ImageProcessing"/>
 		</Unit>
 		<Unit filename="/Users/ericlei/Documents/ImageProcessing/sources/preproc.c">

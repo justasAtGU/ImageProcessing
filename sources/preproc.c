@@ -1,33 +1,38 @@
 //
 // Created by Eric Lei on 6/10/17.
-//
-#include "../includes/preproc.h"
+// Look in preproc.h for function descriptions.
 
-/**
- * Converts 8-bit image to 32-bit image for writing to png file in main.
- * @param image pointer to 8-bit image
- * @param width
- * @param height
- */
-void prepDisplay(unsigned char *image, unsigned int width, unsigned int height);
-{
-    
-}
-/**
- * Converts 32 bit RGBA image to 8-bit grayscale image.
- *
- * @param image a pointer to first pixel of 32 bit image, changes to first pixel of 8 bit grayscale
- * @param width int width of image
- * @param height int height of image
- */
+#include "../includes/preproc.h"
+#include <stdio.h>
+
 void grayscale(unsigned char *image, unsigned int width, unsigned int height)
 {
-    unsigned char *grayPix = image;
+    unsigned char* grayPix = image;
     unsigned int grayIndex = 0;
     for (int i = 0; i < width * height * 4; i+=4)
     {
-        unsigned char avgVal = (image[i] + image[i + 1] + image[i + 2]) / 3;
+        unsigned char avgVal = (306 * image[i] + 601 * image[i+1] + 117 * image[i+2])/1024;
         grayPix[grayIndex] = avgVal;
         grayIndex++;
+    }
+}
+
+void printPixelsBW(unsigned char * image, unsigned int *width, unsigned int *height)
+{
+    for (int row = 0; row < *height; row++)
+    {
+        for (int col = 0; col < *width; col++)
+        {
+            printf("%d ", image[col]);
+        }
+        printf("\n");
+    }
+}
+
+void rotate(unsigned char * image, unsigned int width, unsigned int height)
+{
+    for (int i = 0; i < width * height; i++)
+    {
+
     }
 }

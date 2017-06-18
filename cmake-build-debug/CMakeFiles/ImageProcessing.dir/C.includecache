@@ -20,6 +20,8 @@ iostream
 lodepng.h
 /Users/ericlei/Documents/ImageProcessing/includes/lodepng.h
 
+/Users/ericlei/Documents/ImageProcessing/includes/pgma.h
+
 /Users/ericlei/Documents/ImageProcessing/includes/preproc.h
 
 /Users/ericlei/Documents/ImageProcessing/main.c
@@ -33,8 +35,8 @@ sources/lodepng.c
 /Users/ericlei/Documents/ImageProcessing/sources/lodepng.c
 includes/preproc.h
 /Users/ericlei/Documents/ImageProcessing/includes/preproc.h
-
-/Users/ericlei/Documents/ImageProcessing/sources/gaussianBlur.c
+includes/pgma.h
+/Users/ericlei/Documents/ImageProcessing/includes/pgma.h
 
 /Users/ericlei/Documents/ImageProcessing/sources/lodepng.c
 ../includes/lodepng.h
@@ -46,7 +48,17 @@ stdio.h
 stdlib.h
 -
 
+/Users/ericlei/Documents/ImageProcessing/sources/pgma.c
+stdio.h
+-
+stdlib.h
+-
+../includes/pgma.h
+/Users/ericlei/Documents/ImageProcessing/includes/pgma.h
+
 /Users/ericlei/Documents/ImageProcessing/sources/preproc.c
 ../includes/preproc.h
 /Users/ericlei/Documents/ImageProcessing/includes/preproc.h
+stdio.h
+-
 

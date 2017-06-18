@@ -81,33 +81,9 @@ CMakeFiles/ImageProcessing.dir/main.c.o.provides: CMakeFiles/ImageProcessing.dir
 CMakeFiles/ImageProcessing.dir/main.c.o.provides.build: CMakeFiles/ImageProcessing.dir/main.c.o
 
 
-CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o: CMakeFiles/ImageProcessing.dir/flags.make
-CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o: ../sources/gaussianBlur.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ericlei/Documents/ImageProcessing/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o"
-	/Library/Developer/CommandLineTools/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o   -c /Users/ericlei/Documents/ImageProcessing/sources/gaussianBlur.c
-
-CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.i"
-	/Library/Developer/CommandLineTools/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/ericlei/Documents/ImageProcessing/sources/gaussianBlur.c > CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.i
-
-CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.s"
-	/Library/Developer/CommandLineTools/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/ericlei/Documents/ImageProcessing/sources/gaussianBlur.c -o CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.s
-
-CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o.requires:
-
-.PHONY : CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o.requires
-
-CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o.provides: CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o.requires
-	$(MAKE) -f CMakeFiles/ImageProcessing.dir/build.make CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o.provides.build
-.PHONY : CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o.provides
-
-CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o.provides.build: CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o
-
-
 CMakeFiles/ImageProcessing.dir/sources/preproc.c.o: CMakeFiles/ImageProcessing.dir/flags.make
 CMakeFiles/ImageProcessing.dir/sources/preproc.c.o: ../sources/preproc.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ericlei/Documents/ImageProcessing/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/ImageProcessing.dir/sources/preproc.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ericlei/Documents/ImageProcessing/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/ImageProcessing.dir/sources/preproc.c.o"
 	/Library/Developer/CommandLineTools/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ImageProcessing.dir/sources/preproc.c.o   -c /Users/ericlei/Documents/ImageProcessing/sources/preproc.c
 
 CMakeFiles/ImageProcessing.dir/sources/preproc.c.i: cmake_force
@@ -129,18 +105,42 @@ CMakeFiles/ImageProcessing.dir/sources/preproc.c.o.provides: CMakeFiles/ImagePro
 CMakeFiles/ImageProcessing.dir/sources/preproc.c.o.provides.build: CMakeFiles/ImageProcessing.dir/sources/preproc.c.o
 
 
+CMakeFiles/ImageProcessing.dir/sources/pgma.c.o: CMakeFiles/ImageProcessing.dir/flags.make
+CMakeFiles/ImageProcessing.dir/sources/pgma.c.o: ../sources/pgma.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/ericlei/Documents/ImageProcessing/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/ImageProcessing.dir/sources/pgma.c.o"
+	/Library/Developer/CommandLineTools/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ImageProcessing.dir/sources/pgma.c.o   -c /Users/ericlei/Documents/ImageProcessing/sources/pgma.c
+
+CMakeFiles/ImageProcessing.dir/sources/pgma.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ImageProcessing.dir/sources/pgma.c.i"
+	/Library/Developer/CommandLineTools/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/ericlei/Documents/ImageProcessing/sources/pgma.c > CMakeFiles/ImageProcessing.dir/sources/pgma.c.i
+
+CMakeFiles/ImageProcessing.dir/sources/pgma.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ImageProcessing.dir/sources/pgma.c.s"
+	/Library/Developer/CommandLineTools/usr/bin/cc  $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/ericlei/Documents/ImageProcessing/sources/pgma.c -o CMakeFiles/ImageProcessing.dir/sources/pgma.c.s
+
+CMakeFiles/ImageProcessing.dir/sources/pgma.c.o.requires:
+
+.PHONY : CMakeFiles/ImageProcessing.dir/sources/pgma.c.o.requires
+
+CMakeFiles/ImageProcessing.dir/sources/pgma.c.o.provides: CMakeFiles/ImageProcessing.dir/sources/pgma.c.o.requires
+	$(MAKE) -f CMakeFiles/ImageProcessing.dir/build.make CMakeFiles/ImageProcessing.dir/sources/pgma.c.o.provides.build
+.PHONY : CMakeFiles/ImageProcessing.dir/sources/pgma.c.o.provides
+
+CMakeFiles/ImageProcessing.dir/sources/pgma.c.o.provides.build: CMakeFiles/ImageProcessing.dir/sources/pgma.c.o
+
+
 # Object files for target ImageProcessing
 ImageProcessing_OBJECTS = \
 "CMakeFiles/ImageProcessing.dir/main.c.o" \
-"CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o" \
-"CMakeFiles/ImageProcessing.dir/sources/preproc.c.o"
+"CMakeFiles/ImageProcessing.dir/sources/preproc.c.o" \
+"CMakeFiles/ImageProcessing.dir/sources/pgma.c.o"
 
 # External object files for target ImageProcessing
 ImageProcessing_EXTERNAL_OBJECTS =
 
 ImageProcessing: CMakeFiles/ImageProcessing.dir/main.c.o
-ImageProcessing: CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o
 ImageProcessing: CMakeFiles/ImageProcessing.dir/sources/preproc.c.o
+ImageProcessing: CMakeFiles/ImageProcessing.dir/sources/pgma.c.o
 ImageProcessing: CMakeFiles/ImageProcessing.dir/build.make
 ImageProcessing: CMakeFiles/ImageProcessing.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/ericlei/Documents/ImageProcessing/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable ImageProcessing"
@@ -152,8 +152,8 @@ CMakeFiles/ImageProcessing.dir/build: ImageProcessing
 .PHONY : CMakeFiles/ImageProcessing.dir/build
 
 CMakeFiles/ImageProcessing.dir/requires: CMakeFiles/ImageProcessing.dir/main.c.o.requires
-CMakeFiles/ImageProcessing.dir/requires: CMakeFiles/ImageProcessing.dir/sources/gaussianBlur.c.o.requires
 CMakeFiles/ImageProcessing.dir/requires: CMakeFiles/ImageProcessing.dir/sources/preproc.c.o.requires
+CMakeFiles/ImageProcessing.dir/requires: CMakeFiles/ImageProcessing.dir/sources/pgma.c.o.requires
 
 .PHONY : CMakeFiles/ImageProcessing.dir/requires
 
