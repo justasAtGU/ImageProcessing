@@ -9,7 +9,12 @@
 /**
  * Converts 32 bit RGBA image to 8-bit grayscale image.
  */
-void grayscale(unsigned char *image, unsigned int width, unsigned int height);
+void grayscale(unsigned char *image32, unsigned char *image8, unsigned int width, unsigned int height);
+
+/*
+ * image32 will contain grayscale data. Can call lodepng encode function. Sets alpha value to 255.
+ */
+void prepBWOutPNG(unsigned char *image32, unsigned char *image8, unsigned int width, unsigned int height);
 
 /**
  * Prints pixel values to console.
@@ -23,11 +28,11 @@ void rotate(unsigned char * image, unsigned int width, unsigned int height);
 
 void decimate();
 
-void avgBlur();
+void avgBlur(unsigned char * image, unsigned char* tempBuf, unsigned int width, unsigned int height);
 
 void gaussBlur();
 
-void sharpen();
+void sharpen(unsigned char * image, unsigned char* tempBuf, unsigned int width, unsigned int height);
 
 void erode();
 
