@@ -5,8 +5,8 @@
 #include "includes/preproc.h"
 #include "includes/pgma.h"
 
-#define IMAGE "../images/spellingbee.png" //preprocessed image (PNG format)
-#define OUTIMAGE "../imagesNew/spellingbee.png" //postprocessed image (PGM format)
+#define IMAGE "../images/street.png" //preprocessed image (PNG format)
+#define OUTIMAGE "../imagesNew/street.png" //postprocessed image (PGM format)
 
 void encodeOneStep(const char* filename, const unsigned char* image, unsigned width, unsigned height)
 {
@@ -22,7 +22,7 @@ void encodeOneStep(const char* filename, const unsigned char* image, unsigned wi
 
 /*
  * Outputs image in either PNG or PGM format in imagesNew folder. Color int is 0 if want to output image8 BW to
- * 32 bit PNG image. Color int is 1 if image8 is not used (image32 will be outputted). Does not matter if
+ * 32 bit PNG image. Color int is 1 if image8 is not used (image32 will be outputted to 32 PNG image). Does not matter if
  * output image is PGM format.
  */
 void outputImage(const char* filename, const unsigned char* image8, const unsigned char* image32, unsigned width, unsigned height, int color)
@@ -61,16 +61,16 @@ int main()
 
     error = lodepng_decode32_file(&image32, &width, &height, IMAGE); //image32 is malloc'd
     if(error) printf("error %u: %s\n", error, lodepng_error_text(error));
-    unsigned char* image8 = (unsigned char*) malloc(width*height);
-
-    unsigned char* tempBuf = (unsigned char*) malloc(width*height);
+    unsigned char* image8 = (unsigned char*) malloc(width*height); //used for grayscale image
+    unsigned char* tempBuf = (unsigned char*) malloc(width*height*4); //used to store values in
 
     /* Perform image processing here********************************************/
     grayscale(image32, image8, width, height);
-    avgBlur(image8, tempBuf, width, height);
-    sharpen(image8, tempBuf, width, height);
-    avgBlur(image8, tempBuf, width, height);
+    printf("Orig width and height: %d %d\n", width, height);
+    decimate(image8, &width, &height);
+    printf("New width and height: %d %d\n", width, height);
     /****************************************************************************/
+
     outputImage(OUTIMAGE, image8, image32, width,height, 0);
     free(image8);
     free(image32);

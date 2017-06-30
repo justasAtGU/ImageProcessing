@@ -26,15 +26,24 @@ void printPixelsBW(unsigned char * image, unsigned int *width, unsigned int *hei
  */
 void rotate(unsigned char * image, unsigned int width, unsigned int height);
 
-void decimate();
+/*
+ * 1/4th of original image.
+ */
+void decimate(unsigned char * image8, unsigned int * width, unsigned int * height);
 
+/*
+ * Uses a 3x3 kernel to blur image and averages the 9 pixel values.
+ */
 void avgBlur(unsigned char * image, unsigned char* tempBuf, unsigned int width, unsigned int height);
 
 void gaussBlur();
 
+/*
+ * Sharpens the image.
+ */
 void sharpen(unsigned char * image, unsigned char* tempBuf, unsigned int width, unsigned int height);
 
-void erode();
+void erode(unsigned char * image8, unsigned int width, unsigned int height);
 
 void dilate();
 

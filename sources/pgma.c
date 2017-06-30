@@ -23,6 +23,11 @@ void encodePGM(const char * filename, unsigned char * image, unsigned int width,
     fclose(pgmimage);
 }
 
+void decodePGM(const char * filename, unsigned char * image, unsigned int width, unsigned int height)
+{
+
+}
+
 int findMax(unsigned char* image, unsigned int width, unsigned int height)
 {
     int max = 0;

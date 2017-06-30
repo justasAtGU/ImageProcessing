@@ -18,6 +18,23 @@ void grayscale(unsigned char *image32, unsigned char *image8, unsigned int width
     }
 }
 
+void decimate(unsigned char * image8, unsigned int * width, unsigned int * height)
+{
+    unsigned char * decimatedImage = image8;
+    unsigned index = 0;
+    for (int row = 0; row < *height; row+=2)
+    {
+        index = row * (*width);
+        for (int col = 0; col < *width; col += 2)
+        {
+            *decimatedImage = image8[index];
+            decimatedImage++;
+            index += 2;
+        }
+    }
+    *width = (*width) / 2;
+    *height = (*height) / 2;
+}
 
 void prepBWOutPNG(unsigned char *image32, unsigned char *image8, unsigned int width, unsigned int height)
 {
@@ -54,8 +71,8 @@ void rotate(unsigned char * image, unsigned int width, unsigned int height)
 
 void avgBlur(unsigned char * image, unsigned char* tempBuf, unsigned int width, unsigned int height)
 {
-    int pixelInd;
-    int val;
+    int pixelInd; //points to first element of each row per iteration
+    int val; //Stores the calculated pixel value
     for (int row = 1; row < height - 1; row++)
     {
         pixelInd = width * row;
@@ -84,6 +101,9 @@ void sharpen(unsigned char * image, unsigned char* tempBuf, unsigned int width, 
         pixelInd = width * row;
         for (int col = 1; col < width - 1; col++)
         {
+//            val = 9*image[pixelInd+col] - image[pixelInd+col+1] - image[pixelInd+col-1] - image[pixelInd+col-width]
+//                  - image[pixelInd+col-width-1] - image[pixelInd+col-width+1] - image[pixelInd+col+width]
+//                  - image[pixelInd+col+width-1] - image[pixelInd+col+width+1];
             val = 5*image[pixelInd+col] - image[pixelInd+col-1] - image[pixelInd+col+1]
             -image[pixelInd+col-width] - image[pixelInd+col+width];
             if (val < 0)
@@ -96,3 +116,7 @@ void sharpen(unsigned char * image, unsigned char* tempBuf, unsigned int width, 
     memcpy(image, tempBuf, width*height);
 }
 
+void erode(unsigned char * image8, unsigned int width, unsigned int height)
+{
+    
+}
