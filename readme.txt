@@ -1,1 +1,0 @@
-Download main.c, images, imagesNew, includes, and sources to compile locally. 
