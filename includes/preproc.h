@@ -43,7 +43,7 @@ void gaussBlur();
  */
 void sharpen(unsigned char * image, unsigned char* tempBuf, unsigned int width, unsigned int height);
 
-void erode(unsigned char * image8, unsigned int width, unsigned int height);
+void erode(unsigned char * image8, unsigned char * tempBuf, unsigned int width, unsigned int height);
 
 void dilate();
 
