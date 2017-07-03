@@ -27,7 +27,7 @@ void printPixelsBW(unsigned char * image, unsigned int *width, unsigned int *hei
 void rotate(unsigned char * image, unsigned int width, unsigned int height);
 
 /*
- * 1/4th of original image.
+ * Halves height and width. If height or width is odd, will lose the last row or column.
  */
 void decimate(unsigned char * image8, unsigned int * width, unsigned int * height);
 

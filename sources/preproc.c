@@ -20,12 +20,17 @@ void grayscale(unsigned char *image32, unsigned char *image8, unsigned int width
 
 void decimate(unsigned char * image8, unsigned int * width, unsigned int * height)
 {
+    if (*height < 2 || *width < 2)
+    {
+        printf("Height or width too small for decimation.\n");
+        return;
+    }
     unsigned char * decimatedImage = image8;
     unsigned index = 0;
-    for (int row = 0; row < *height; row+=2)
+    for (int row = 0; row < *height-1; row+=2)
     {
         index = row * (*width);
-        for (int col = 0; col < *width; col += 2)
+        for (int col = 0; col < *width-1; col += 2)
         {
             *decimatedImage = image8[index];
             decimatedImage++;
@@ -118,5 +123,5 @@ void sharpen(unsigned char * image, unsigned char* tempBuf, unsigned int width, 
 
 void erode(unsigned char * image8, unsigned int width, unsigned int height)
 {
-    
+
 }

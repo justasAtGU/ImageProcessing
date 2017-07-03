@@ -5,8 +5,8 @@
 #include "includes/preproc.h"
 #include "includes/pgma.h"
 
-#define IMAGE "../images/street.png" //preprocessed image (PNG format)
-#define OUTIMAGE "../imagesNew/street.png" //postprocessed image (PGM format)
+#define IMAGE "../images/lion.png" //preprocessed image (PNG format)
+#define OUTIMAGE "../imagesNew/lion.png" //postprocessed image (PGM format)
 
 void encodeOneStep(const char* filename, const unsigned char* image, unsigned width, unsigned height)
 {
@@ -67,6 +67,12 @@ int main()
     /* Perform image processing here********************************************/
     grayscale(image32, image8, width, height);
     printf("Orig width and height: %d %d\n", width, height);
+    decimate(image8, &width, &height);
+    printf("New width and height: %d %d\n", width, height);
+    decimate(image8, &width, &height);
+    printf("New width and height: %d %d\n", width, height);
+    decimate(image8, &width, &height);
+    printf("New width and height: %d %d\n", width, height);
     decimate(image8, &width, &height);
     printf("New width and height: %d %d\n", width, height);
     /****************************************************************************/
