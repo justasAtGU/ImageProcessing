@@ -7,7 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-unsigned char minimum(unsigned char v1, unsigned char v2, unsigned char v3); /*finds val of max of 3 vals*/
+unsigned char minimum(unsigned char v1, unsigned char v2, unsigned char v3); /*finds val of min of 3 vals*/
+unsigned char maximum(unsigned char v1, unsigned char v2, unsigned char v3); /*finds val of max of 3 vals*/
 
 void grayscale(unsigned char *image32, unsigned char *image8, unsigned int width, unsigned int height)
 {
@@ -123,7 +124,6 @@ void sharpen(unsigned char * image, unsigned char* tempBuf, unsigned int width, 
     memcpy(image, tempBuf, width*height);
 }
 
-//has weird line going down diagonally, need to fix
 void erode(unsigned char * image8, unsigned char * tempBuf, unsigned int width, unsigned int height)
 {
     unsigned char * erodeImage = image8 + width + 1;
@@ -143,8 +143,33 @@ void erode(unsigned char * image8, unsigned char * tempBuf, unsigned int width, 
             v2 = v3;
             v3 = minimum(*(erodeImage - width + 1), *(erodeImage + 1), *(erodeImage + width + 1));
         }
-        erodeImage += 3;
-        temp += 3;
+        erodeImage += 2;
+        temp += 2;
+    }
+    memcpy(image8, tempBuf, width*height);
+}
+
+void dilate(unsigned char * image8, unsigned char * tempBuf, unsigned int width, unsigned int height)
+{
+    unsigned char * erodeImage = image8 + width + 1;
+    unsigned char * temp = tempBuf + width + 1;
+    unsigned char v1, v2, v3;
+    for (int row = 1; row < height - 1; row++)
+    {
+        v1 = maximum(*(erodeImage - width - 1), *(erodeImage - 1), *(erodeImage + width - 1));
+        v2 = maximum(*(erodeImage - width), *(erodeImage), *(erodeImage + width));
+        v3 = maximum(*(erodeImage - width + 1), *(erodeImage + 1), *(erodeImage + width + 1));
+        for (int col = 1; col < width - 1; col++)
+        {
+            *temp = maximum(v1, v2, v3);
+            temp++;
+            erodeImage++;
+            v1 = v2;
+            v2 = v3;
+            v3 = maximum(*(erodeImage - width + 1), *(erodeImage + 1), *(erodeImage + width + 1));
+        }
+        erodeImage += 2;
+        temp += 2;
     }
     memcpy(image8, tempBuf, width*height);
 }
@@ -157,4 +182,14 @@ unsigned char minimum(unsigned char v1, unsigned char v2, unsigned char v3)
     if (v3 < min)
         min = v3;
     return min;
+}
+
+unsigned char maximum(unsigned char v1, unsigned char v2, unsigned char v3)
+{
+    unsigned char max = v1;
+    if (v2 > max)
+        max = v2;
+    if (v3 > max)
+        max = v3;
+    return max;
 }

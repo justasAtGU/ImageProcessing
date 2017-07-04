@@ -43,9 +43,17 @@ void gaussBlur();
  */
 void sharpen(unsigned char * image, unsigned char* tempBuf, unsigned int width, unsigned int height);
 
+/*
+ * Morphology erosion.
+ */
 void erode(unsigned char * image8, unsigned char * tempBuf, unsigned int width, unsigned int height);
 
-void dilate();
+/*
+ * Morphology dilation.
+ */
+void dilate(unsigned char * image8, unsigned char * tempBuf, unsigned int width, unsigned int height);
+
+void dithering();
 
 
 #endif //IMAGEPROCESSING_PREPROC_H
