@@ -82,6 +82,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/ericlei/Documents/ImageProcessing/includes/canny.h">
+			<Option target="ImageProcessing"/>
+		</Unit>
 		<Unit filename="/Users/ericlei/Documents/ImageProcessing/includes/pgma.h">
 			<Option target="ImageProcessing"/>
 		</Unit>
@@ -89,6 +92,9 @@
 			<Option target="ImageProcessing"/>
 		</Unit>
 		<Unit filename="/Users/ericlei/Documents/ImageProcessing/main.c">
+			<Option target="ImageProcessing"/>
+		</Unit>
+		<Unit filename="/Users/ericlei/Documents/ImageProcessing/sources/canny.c">
 			<Option target="ImageProcessing"/>
 		</Unit>
 		<Unit filename="/Users/ericlei/Documents/ImageProcessing/sources/pgma.c">

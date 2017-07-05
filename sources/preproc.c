@@ -193,3 +193,54 @@ unsigned char maximum(unsigned char v1, unsigned char v2, unsigned char v3)
         max = v3;
     return max;
 }
+
+void gaussBlur5x5(unsigned char * image8, unsigned char *tempBuf, unsigned int *width, unsigned int *height)
+{
+    unsigned int * tempbuf = (unsigned int *) tempBuf;
+    int arrayRow;
+    int val;
+
+    //vertical convolution
+    for (int row = 2; row < (*height) - 2; row++)
+    {
+        arrayRow = row * (*width);
+        for (int col = 0; col < (*width); col++)
+        {
+            val = image8[arrayRow - 2*(*width) + col] + 4*image8[arrayRow-(*width) + col] + 6*image8[arrayRow + col] + 4*image8[arrayRow+(*width)+col]
+                    + image8[arrayRow + 2*(*width)+col];
+            //printf("%d\n", val);
+            tempbuf[arrayRow+col] = val;
+        }
+    }
+
+    //horizontal convolution, normalizes pixel value
+    for (int row = 0; row < (*height); row++)
+    {
+        arrayRow = row * (*width);
+        for (int col = 2; col < (*width) - 2; col++)
+        {
+            val = tempbuf[arrayRow-2+col] + 4*tempbuf[arrayRow-1+col] + 6*tempbuf[arrayRow+col] +
+                    4*tempbuf[arrayRow+1+col] + tempbuf[arrayRow + 2 + col];
+            val = val/256;
+            //printf("%d\n", val);
+            if (val < 0)
+                val = 0;
+            if (val > 255)
+                val = 255;
+            image8[arrayRow + col] = val;
+        }
+    }
+
+    //Removes the border.
+    arrayRow = 0;
+    for (int row = 0; row < (*height) - 4; row++)
+    {
+        for (int col = 0; col < (*width) - 4; col++)
+        {
+            image8[arrayRow] = image8[(row+2)*(*width) + 2 + col];
+            arrayRow++;
+        }
+    }
+    *width = *width - 4;
+    *height = *height - 4;
+}

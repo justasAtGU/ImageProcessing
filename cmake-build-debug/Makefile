@@ -150,6 +150,33 @@ main.c.s:
 	$(MAKE) -f CMakeFiles/ImageProcessing.dir/build.make CMakeFiles/ImageProcessing.dir/main.c.s
 .PHONY : main.c.s
 
+sources/canny.o: sources/canny.c.o
+
+.PHONY : sources/canny.o
+
+# target to build an object file
+sources/canny.c.o:
+	$(MAKE) -f CMakeFiles/ImageProcessing.dir/build.make CMakeFiles/ImageProcessing.dir/sources/canny.c.o
+.PHONY : sources/canny.c.o
+
+sources/canny.i: sources/canny.c.i
+
+.PHONY : sources/canny.i
+
+# target to preprocess a source file
+sources/canny.c.i:
+	$(MAKE) -f CMakeFiles/ImageProcessing.dir/build.make CMakeFiles/ImageProcessing.dir/sources/canny.c.i
+.PHONY : sources/canny.c.i
+
+sources/canny.s: sources/canny.c.s
+
+.PHONY : sources/canny.s
+
+# target to generate assembly for a file
+sources/canny.c.s:
+	$(MAKE) -f CMakeFiles/ImageProcessing.dir/build.make CMakeFiles/ImageProcessing.dir/sources/canny.c.s
+.PHONY : sources/canny.c.s
+
 sources/pgma.o: sources/pgma.c.o
 
 .PHONY : sources/pgma.o
@@ -216,6 +243,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... sources/canny.o"
+	@echo "... sources/canny.i"
+	@echo "... sources/canny.s"
 	@echo "... sources/pgma.o"
 	@echo "... sources/pgma.i"
 	@echo "... sources/pgma.s"

@@ -36,7 +36,13 @@ void decimate(unsigned char * image8, unsigned int * width, unsigned int * heigh
  */
 void avgBlur(unsigned char * image, unsigned char* tempBuf, unsigned int width, unsigned int height);
 
-void gaussBlur();
+/*
+ * Performs gaussian filter with 5x5 gaussian kernel.
+ * (1/256) * [1 4 6 4 1; 4 16 24 16 4; 6 24 36 24 6; 4 16 24 16 4; 1 4 6 4 1]
+ * Uses separability of Gaussian kernel.
+ * Removes the 2 pixel width border surrounding the resultant image.
+ */
+void gaussBlur5x5(unsigned char * image, unsigned char* tempBuf, unsigned int *width, unsigned int *height);
 
 /*
  * Sharpens the image.
@@ -53,7 +59,7 @@ void erode(unsigned char * image8, unsigned char * tempBuf, unsigned int width, 
  */
 void dilate(unsigned char * image8, unsigned char * tempBuf, unsigned int width, unsigned int height);
 
-void dithering();
+void sobel();
 
 
 #endif //IMAGEPROCESSING_PREPROC_H

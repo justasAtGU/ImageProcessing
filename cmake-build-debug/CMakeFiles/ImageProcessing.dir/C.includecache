@@ -6,6 +6,8 @@
 
 #IncludeRegexTransform: 
 
+/Users/ericlei/Documents/ImageProcessing/includes/canny.h
+
 /Users/ericlei/Documents/ImageProcessing/includes/lodepng.h
 string.h
 -
@@ -37,6 +39,14 @@ includes/preproc.h
 /Users/ericlei/Documents/ImageProcessing/includes/preproc.h
 includes/pgma.h
 /Users/ericlei/Documents/ImageProcessing/includes/pgma.h
+includes/canny.h
+/Users/ericlei/Documents/ImageProcessing/includes/canny.h
+
+/Users/ericlei/Documents/ImageProcessing/sources/canny.c
+../includes/canny.h
+/Users/ericlei/Documents/ImageProcessing/includes/canny.h
+../includes/preproc.h
+/Users/ericlei/Documents/ImageProcessing/includes/preproc.h
 
 /Users/ericlei/Documents/ImageProcessing/sources/lodepng.c
 ../includes/lodepng.h

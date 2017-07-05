@@ -4,6 +4,7 @@
 #include "sources/lodepng.c"
 #include "includes/preproc.h"
 #include "includes/pgma.h"
+#include "includes/canny.h"
 
 #define IMAGE "../images/spellingbee.png" //preprocessed image
 #define OUTIMAGE "../imagesNew/spellingbee.png" //postprocessed image
@@ -66,11 +67,7 @@ int main()
 
     /* Perform image processing here********************************************/
     grayscale(image32, image8, width, height);
-
-    decimate(image8, &width, &height);
-    dilate(image8, tempBuf, width, height);
-    dilate(image8, tempBuf, width, height);
-
+    gaussBlur5x5(image8, tempBuf, &width, &height);
     /****************************************************************************/
 
     outputImage(OUTIMAGE, image8, image32, width,height, 0);
