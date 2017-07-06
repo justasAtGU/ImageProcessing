@@ -47,6 +47,12 @@ includes/canny.h
 /Users/ericlei/Documents/ImageProcessing/includes/canny.h
 ../includes/preproc.h
 /Users/ericlei/Documents/ImageProcessing/includes/preproc.h
+math.h
+-
+stdlib.h
+-
+stdio.h
+-
 
 /Users/ericlei/Documents/ImageProcessing/sources/lodepng.c
 ../includes/lodepng.h
