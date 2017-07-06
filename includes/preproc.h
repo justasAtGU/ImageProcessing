@@ -59,7 +59,17 @@ void erode(unsigned char * image8, unsigned char * tempBuf, unsigned int width, 
  */
 void dilate(unsigned char * image8, unsigned char * tempBuf, unsigned int width, unsigned int height);
 
-void sobel();
+/*
+ * Finds gradients by convolving image with horizontal Sobel 3x3 kernel.
+ * Returns pointer to array of values that contain the x-direction gradient.
+ * Needs to be freed.
+ */
+int * sobelHoriz(unsigned char * image8, unsigned * width, unsigned * height);
+
+
+int * sobelVert(unsigned char * image8, unsigned * width, unsigned * height);
+
+
 
 
 #endif //IMAGEPROCESSING_PREPROC_H

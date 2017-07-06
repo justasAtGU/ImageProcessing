@@ -67,10 +67,10 @@ int main()
 
     /* Perform image processing here********************************************/
     grayscale(image32, image8, width, height);
-    gaussBlur5x5(image8, tempBuf, &width, &height);
+    
     /****************************************************************************/
 
-    outputImage(OUTIMAGE, image8, image32, width,height, 0);
+    outputImage(OUTIMAGE, Gy, image32, width-2, height-2, 0);
     free(image8);
     free(image32);
     free(tempBuf);

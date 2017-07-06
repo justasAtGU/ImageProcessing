@@ -244,3 +244,52 @@ void gaussBlur5x5(unsigned char * image8, unsigned char *tempBuf, unsigned int *
     *width = *width - 4;
     *height = *height - 4;
 }
+
+/*
+ * Needs to freed if called.
+ */
+int * sobelHoriz(unsigned char * image8, unsigned * width, unsigned * height)
+{
+    int * Gx = (int *) malloc((*width- 2) * (*height-2) * 4); //x direction gradient to be returned
+    int rowIndex;
+    int Gxindex = 0;
+    int val;
+    for (int row = 1; row < (*height) - 1; row++)
+    {
+        rowIndex = row * (*width);
+        for (int col = 1; col < (*width)-1; col++)
+        {
+            val = image8[rowIndex + col - (*width) + 1] + 2*image8[rowIndex+col+1] + image8[rowIndex + col + (*width) + 1]
+                    - image8[rowIndex + col - (*width) - 1] - 2*image8[rowIndex+col-1] - image8[rowIndex+col+(*width)-1];
+            Gx[Gxindex] = val;
+            //printf("%d\n", val);
+            Gxindex++;
+        }
+    }
+    return Gx;
+}
+
+/*
+ * Needs to freed if called.
+ */
+int * sobelVert(unsigned char * image8, unsigned * width, unsigned * height)
+{
+    int * Gy = (int *) malloc((*width- 2) * (*height-2) * 4); //x direction gradient to be returned
+    int rowIndex;
+    int Gyindex = 0;
+    int val;
+    for (int row = 1; row < (*height) - 1; row++)
+    {
+        rowIndex = row * (*width);
+        for (int col = 1; col < (*width)-1; col++)
+        {
+            val = image8[rowIndex+col-(*width)-1] + 2*image8[rowIndex+col-(*width)]+image8[rowIndex+col-(*width)+1]
+                    -image8[rowIndex+col+(*width)-1] - 2*image8[rowIndex+col+(*width)] - image8[rowIndex+col+(*width)+1];
+            Gy[Gyindex] = val;
+
+            //printf("%d\n", val);
+            Gyindex++;
+        }
+    }
+    return Gy;
+}
