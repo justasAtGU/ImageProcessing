@@ -7,19 +7,196 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define PI 3.1415926
+
+int isNotMax(int leftNeighbor, int pixel, int rightNeighbor); /*returns 1 if pixel is not max, 0 otherwise*/
 
 int * edgeDirection(int* horizGx, int * vertGy, int width, int height)
 {
     int * angles = (int *) malloc(width*height*4);
+    int Gx;
+    int Gy;
     for (int i = 0; i < width * height; i++)
     {
-        angles[i] = (int) (atan2(vertGy[i], horizGx[i]) * (180/PI));
-        printf("%d: %d\n", i, angles[i]);
+        Gx = horizGx[i];
+        Gy = vertGy[i];
+//        if (Gx == 0)
+//        {
+//            if (Gy == 0)
+//                angles[i] = 0;
+//            else if (Gy > 0)
+//                angles[i] = 90;
+//            else
+//                angles[i] = -90;
+//        }
+        angles[i] = (int) (atan2(Gy, Gx) * (180/PI));
+        //printf("Angle: %d\n", angles[i]);
     }
     return angles;
 }
 
+int * edgeMagnitude(int* horizGx, int *vertGy, int width, int height)
+{
+    int * magnitude = (int *) malloc(width*height*4);
+    for (int i = 0; i < width * height; i++)
+    {
+        magnitude[i] = (int) (fabs(horizGx[i]) + fabs(vertGy[i]));
+        //printf("Magnitude: %d\n", magnitude[i]);
+    }
+    return magnitude;
+}
 
+unsigned char * edgeMag(int* horizGx, int *vertGy, int width, int height)
+{
+    unsigned char * magnitude = (int *) malloc(width*height*4);
+    int val;
+    for (int i = 0; i < width * height; i++)
+    {
+        val = (int) (fabs(horizGx[i]) + fabs(vertGy[i]));
+        if (val < 0)
+            val = 0;
+        if (val > 255)
+            val = 255;
+        magnitude[i] = val;
+        //printf("Magnitude: %d\n", magnitude[i]);
+    }
+    return magnitude;
+}
 
+void nonMaxSuppress(unsigned char * image8, int * magnitude, int * direction, int width, int height)
+{
+    int rowIndex;
+    int val;
+    for (int row = 1; row < height-1; row++)
+    {
+        rowIndex = width * row;
+        for (int col = 1; col < width-1; col++)
+        {
+            int currPixel = rowIndex + col;
+            //horizontal axis
+            if ((direction[currPixel] <= 22 && direction[currPixel] >= -22) || (direction[currPixel] >= 158 ||
+                                                                                direction[currPixel] <= -158))
+            {
+                if (isNotMax(magnitude[currPixel-1], magnitude[currPixel], magnitude[currPixel+1]))
+                    magnitude[currPixel] = 0;
+                else
+                {
+                    val = magnitude[currPixel];
+//                    if (val < 0)
+//                        val = 0;
+//                    if (val > 255)
+//                        val = 255;
+                    magnitude[currPixel] = val;
+                }
+                //printf("horiz: %d\n", image8[currPixel]);
+            }
+
+            //45, -135 degree axis
+            if ((direction[currPixel] <= 67 && direction[currPixel] >= 23) || (direction[currPixel] >= -157 &&
+                                                                                direction[currPixel] <= -113))
+            {
+                if (isNotMax(magnitude[currPixel+width-1], magnitude[currPixel], magnitude[currPixel-width+1]))
+                    magnitude[currPixel] = 0;
+                else
+                {
+                    val = magnitude[currPixel];
+//                    if (val < 0)
+//                        val = 0;
+//                    if (val > 255)
+//                        val = 255;
+                    magnitude[currPixel] = val;
+                }
+                //printf("right: %d\n", image8[currPixel]);
+            }
+
+            //vertical axis
+            if ((direction[currPixel] <= 112 && direction[currPixel] >= 68) || (direction[currPixel] >= -112 &&
+                                                                               direction[currPixel] <= -68))
+            {
+                if (isNotMax(magnitude[currPixel+width], magnitude[currPixel], magnitude[currPixel-width]))
+                    magnitude[currPixel] = 0;
+                else
+                {
+                    val = magnitude[currPixel];
+//                    if (val < 0)
+//                        val = 0;
+//                    if (val > 255)
+//                        val = 255;
+                    magnitude[currPixel] = val;
+                }
+                //printf("vert: %d\n", image8[currPixel]);
+            }
+
+            //135, -45 degree axis
+            if ((direction[currPixel] <= 157 && direction[currPixel] >= 113) || (direction[currPixel] >= -67 &&
+                                                                                direction[currPixel] <= -23))
+            //else
+            {
+                if (isNotMax(magnitude[currPixel-width-1], magnitude[currPixel], magnitude[currPixel+width+1]))
+                    magnitude[currPixel] = 0;
+                else
+                {
+                    val = magnitude[currPixel];
+//                    if (val < 0)
+//                        val = 0;
+//                    if (val > 255)
+//                        val = 255;
+                    magnitude[currPixel] = val;
+                }
+                //printf("left: %d\n", image8[currPixel]);
+            }
+        }
+    }
+    //set border to 0
+}
+
+int isNotMax(int leftNeighbor, int pixel, int rightNeighbor)
+{
+    if (leftNeighbor >= pixel || rightNeighbor >= pixel)
+        return 1;
+    return 0;
+}
 //Need to reduce width and height by 2 after calling sobelHoriz and sobelVert
+
+void doubleThreshold(unsigned char * image8, int * magnitude, int *width, int *height)
+{
+    int magIndex = *width + 1;
+    int imageIndex = 0;
+    int val;
+    for (int row = 1; row < *height-1; row++)
+    {
+        for (int col = 1; col < *width - 1; col++)
+        {
+            val = magnitude[magIndex];
+            if (val <= LOW_THRESH)
+                val = 0;
+            if (val < 0)
+                val = 0;
+            if (val > 255)
+                val = 255;
+            image8[imageIndex] = val;
+            magIndex++;
+            imageIndex++;
+        }
+        magIndex += 2;
+    }
+    *width = *width - 2;
+    *height = *height - 2;
+}
+
+void detectEdgeCanny(unsigned char * image8, unsigned char * tempBuf, int *width, int *height)
+{
+    gaussBlur5x5(image8, tempBuf, width, height);
+    int * Gx = sobelHoriz(image8, width, height);
+    int * Gy = sobelVert(image8, width, height);
+    *width = *width -2;
+    *height = *height -2;
+    int * direction = edgeDirection(Gx, Gy, *width, *height);
+    int * magnitude = edgeMagnitude(Gx, Gy, *width, *height);
+    nonMaxSuppress(image8, magnitude, direction, *width, *height);
+    doubleThreshold(image8, magnitude, width, height);
+
+    free(Gx);
+    free(Gy);
+    free(direction);
+    free(magnitude);
+}

@@ -6,8 +6,8 @@
 #include "includes/pgma.h"
 #include "includes/canny.h"
 
-#define IMAGE "../images/street.png" //preprocessed image
-#define OUTIMAGE "../imagesNew/street.png" //postprocessed image
+#define IMAGE "../images/Datamatrix.png" //preprocessed image
+#define OUTIMAGE "../imagesNew/Datamatrix.png" //postprocessed image
 
 void encodeOneStep(const char* filename, const unsigned char* image, unsigned width, unsigned height)
 {
@@ -68,19 +68,13 @@ int main()
     /* Perform image processing here********************************************/
     grayscale(image32, image8, width, height);
 
-    int * Gx = sobelHoriz(image8, &width, &height);
-    int * Gy = sobelVert(image8, &width, &height);
-    int * angles = edgeDirection(Gx, Gy, width-2, height-2);
-    free(Gx);
-    free(Gy);
-    free(angles);
+    detectEdgeCanny(image8, tempBuf, &width, &height);
     /****************************************************************************/
 
     outputImage(OUTIMAGE, image8, image32, width, height, 0);
     free(image8);
     free(image32);
     free(tempBuf);
-
     return 0;
 }
 

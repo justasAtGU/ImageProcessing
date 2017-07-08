@@ -247,6 +247,7 @@ void gaussBlur5x5(unsigned char * image8, unsigned char *tempBuf, unsigned int *
 
 /*
  * Needs to freed if called.
+ * Re-implement by using matrix separability.
  */
 int * sobelHoriz(unsigned char * image8, unsigned * width, unsigned * height)
 {
@@ -271,6 +272,7 @@ int * sobelHoriz(unsigned char * image8, unsigned * width, unsigned * height)
 
 /*
  * Needs to freed if called.
+ * Re-implement through matrix separability.
  */
 int * sobelVert(unsigned char * image8, unsigned * width, unsigned * height)
 {
