@@ -1,8 +1,7 @@
 To generate Makefile (uses CMake):
 1. Enter project directory.
-2. rm -r cmake-build-debug
-3. cd cmake-build-debug
-4. cmake ..
+2. cd cmake-build-debug
+3. cmake ..
 
 To compile and run:
 1. Enter cmake-build-debug.
