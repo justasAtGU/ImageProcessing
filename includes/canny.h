@@ -20,7 +20,6 @@ int * edgeDirection(int* horizGx, int * vertGy, int width, int height);
  * Must be freed.
  */
 int * edgeMagnitude(int* horizGx, int *vertGy, int width, int height);
-unsigned char * edgeMag(int* horizGx, int *vertGy, int width, int height);
 
 /*
  * Suppresses edges that are not maxes.
