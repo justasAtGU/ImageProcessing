@@ -5,8 +5,8 @@
 #ifndef IMAGEPROCESSING_CANNY_H
 #define IMAGEPROCESSING_CANNY_H
 
-#define HIGH_THRESH 200
-#define LOW_THRESH 10
+#define HIGH_THRESH 155
+#define LOW_THRESH 22
 #define PI 3.1415926
 
 /*

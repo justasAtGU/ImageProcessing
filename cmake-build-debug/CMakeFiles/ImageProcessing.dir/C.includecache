@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/Users/ericlei/Documents/ImageProcessing/includes/canny.h
+/Users/ericlei/documents/ImageProcessing/includes/canny.h
 
-/Users/ericlei/Documents/ImageProcessing/includes/lodepng.h
+/Users/ericlei/documents/ImageProcessing/includes/lodepng.h
 string.h
 -
 vector
@@ -16,47 +16,49 @@ vector
 string
 -
 lodepng.h
-/Users/ericlei/Documents/ImageProcessing/includes/lodepng.h
+/Users/ericlei/documents/ImageProcessing/includes/lodepng.h
 iostream
 -
 lodepng.h
-/Users/ericlei/Documents/ImageProcessing/includes/lodepng.h
+/Users/ericlei/documents/ImageProcessing/includes/lodepng.h
 
-/Users/ericlei/Documents/ImageProcessing/includes/pgma.h
+/Users/ericlei/documents/ImageProcessing/includes/pgma.h
 
-/Users/ericlei/Documents/ImageProcessing/includes/preproc.h
+/Users/ericlei/documents/ImageProcessing/includes/preproc.h
 
-/Users/ericlei/Documents/ImageProcessing/main.c
+/Users/ericlei/documents/ImageProcessing/main.c
 stdio.h
 -
 stdlib.h
 -
 includes/lodepng.h
-/Users/ericlei/Documents/ImageProcessing/includes/lodepng.h
+/Users/ericlei/documents/ImageProcessing/includes/lodepng.h
 sources/lodepng.c
-/Users/ericlei/Documents/ImageProcessing/sources/lodepng.c
+/Users/ericlei/documents/ImageProcessing/sources/lodepng.c
 includes/preproc.h
-/Users/ericlei/Documents/ImageProcessing/includes/preproc.h
+/Users/ericlei/documents/ImageProcessing/includes/preproc.h
 includes/pgma.h
-/Users/ericlei/Documents/ImageProcessing/includes/pgma.h
+/Users/ericlei/documents/ImageProcessing/includes/pgma.h
 includes/canny.h
-/Users/ericlei/Documents/ImageProcessing/includes/canny.h
+/Users/ericlei/documents/ImageProcessing/includes/canny.h
 
-/Users/ericlei/Documents/ImageProcessing/sources/canny.c
+/Users/ericlei/documents/ImageProcessing/sources/canny.c
 ../includes/canny.h
-/Users/ericlei/Documents/ImageProcessing/includes/canny.h
+/Users/ericlei/documents/ImageProcessing/includes/canny.h
 ../includes/preproc.h
-/Users/ericlei/Documents/ImageProcessing/includes/preproc.h
+/Users/ericlei/documents/ImageProcessing/includes/preproc.h
 math.h
 -
 stdlib.h
 -
 stdio.h
 -
+string.h
+-
 
-/Users/ericlei/Documents/ImageProcessing/sources/lodepng.c
+/Users/ericlei/documents/ImageProcessing/sources/lodepng.c
 ../includes/lodepng.h
-/Users/ericlei/Documents/ImageProcessing/includes/lodepng.h
+/Users/ericlei/documents/ImageProcessing/includes/lodepng.h
 limits.h
 -
 stdio.h
@@ -64,17 +66,17 @@ stdio.h
 stdlib.h
 -
 
-/Users/ericlei/Documents/ImageProcessing/sources/pgma.c
+/Users/ericlei/documents/ImageProcessing/sources/pgma.c
 stdio.h
 -
 stdlib.h
 -
 ../includes/pgma.h
-/Users/ericlei/Documents/ImageProcessing/includes/pgma.h
+/Users/ericlei/documents/ImageProcessing/includes/pgma.h
 
-/Users/ericlei/Documents/ImageProcessing/sources/preproc.c
+/Users/ericlei/documents/ImageProcessing/sources/preproc.c
 ../includes/preproc.h
-/Users/ericlei/Documents/ImageProcessing/includes/preproc.h
+/Users/ericlei/documents/ImageProcessing/includes/preproc.h
 stdio.h
 -
 stdlib.h

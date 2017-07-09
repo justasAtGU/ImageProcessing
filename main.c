@@ -6,8 +6,8 @@
 #include "includes/pgma.h"
 #include "includes/canny.h"
 
-#define IMAGE "../images/Datamatrix.png" //preprocessed image
-#define OUTIMAGE "../imagesNew/Datamatrix.png" //postprocessed image
+#define IMAGE "../images/spellingbee.png" //preprocessed image
+#define OUTIMAGE "../imagesNew/spellingbee.png" //postprocessed image
 
 void encodeOneStep(const char* filename, const unsigned char* image, unsigned width, unsigned height)
 {
@@ -69,6 +69,8 @@ int main()
     grayscale(image32, image8, width, height);
 
     detectEdgeCanny(image8, tempBuf, &width, &height);
+    //dilate(image8, tempBuf, width, height);
+    //erode(image8, tempBuf, width, height);
     /****************************************************************************/
 
     outputImage(OUTIMAGE, image8, image32, width, height, 0);
