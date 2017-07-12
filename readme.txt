@@ -14,12 +14,7 @@ To compile and run:
 3. make
 4. ./ImageProcessing (image name)
 
-<<<<<<< HEAD
 /images contains on the original images to perform image processing on. Use program argument as image name. The resultant images will be outputted into /imagesNew. 
-=======
-/images contains the original images to perform image processing on. The resultant images will
-be outputted into /imagesNew. Refer to the macro definitions of IMAGE and OUTIMAGE in main.c
->>>>>>> origin/master
 
 Uses the lodepng library for decoding and encoding PNG images. Also has the ability to encode into PGM formatted images.
 
