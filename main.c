@@ -6,8 +6,8 @@
 #include "includes/pgma.h"
 #include "includes/canny.h"
 
-#define IMAGE "../images/spellingbee.png" //preprocessed image
-#define OUTIMAGE "../imagesNew/spellingbee.png" //postprocessed image
+char IMAGE[50]; //preprocessed image. Takes in first program argument.
+char OUTIMAGE[50]; //postprocessed image (same as preprocessed but in imagesNew folder)
 
 void encodeOneStep(const char* filename, const unsigned char* image, unsigned width, unsigned height)
 {
@@ -19,6 +19,16 @@ void encodeOneStep(const char* filename, const unsigned char* image, unsigned wi
     /*if there's an error, display it*/
     if(error) printf("error %u: %s\n", error, lodepng_error_text(error));
     fclose(newimage);
+}
+
+/*
+ * Processes name of image.
+ * Later should add ability to just perform specified functions.
+ */
+void processArgs(int argc, char *argv[])
+{
+    sprintf(IMAGE, "../images/%s", argv[1]);
+    sprintf(OUTIMAGE, "../imagesNew/%s", argv[1]);
 }
 
 /*
@@ -54,8 +64,9 @@ void outputImage(const char* filename, const unsigned char* image8, const unsign
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+    processArgs(argc, argv); //parses image name
     unsigned error;
     unsigned char* image32; //will point to first (upper left) pixel after png decode
     unsigned width, height;
@@ -68,6 +79,7 @@ int main()
     /* Perform image processing here********************************************/
     grayscale(image32, image8, width, height);
 
+    decimate(image8, &width, &height);
     detectEdgeCanny(image8, tempBuf, &width, &height);
     //dilate(image8, tempBuf, width, height);
     //erode(image8, tempBuf, width, height);
