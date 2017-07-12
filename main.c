@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "includes/lodepng.h"
 #include "sources/lodepng.c"
 #include "includes/preproc.h"
@@ -28,6 +29,13 @@ void encodeOneStep(const char* filename, const unsigned char* image, unsigned wi
 void processArgs(int argc, char *argv[])
 {
     sprintf(IMAGE, "../images/%s", argv[1]);
+//    if (argv[2][0] == "p" && argv[2][1] == "g" && argv[2][2] == "m")
+//    {
+//        char * temp;
+//        strncpy(temp, argv[1], strlen(argv[1]) - 3);
+//        printf("%s", temp);
+//        sprintf(OUTIMAGE, "../imagesNew/%s.pgm", temp);
+//    }
     sprintf(OUTIMAGE, "../imagesNew/%s", argv[1]);
 }
 
@@ -76,14 +84,19 @@ int main(int argc, char *argv[])
     unsigned char* image8 = (unsigned char*) malloc(width*height); //used for grayscale image
     unsigned char* tempBuf = (unsigned char*) malloc(width*height*4); //used to store values in
 
+    clock_t start = clock(), diff;
+
     /* Perform image processing here********************************************/
     grayscale(image32, image8, width, height);
 
-    decimate(image8, &width, &height);
+    //decimate(image8, &width, &height);
     detectEdgeCanny(image8, tempBuf, &width, &height);
     //dilate(image8, tempBuf, width, height);
     //erode(image8, tempBuf, width, height);
     /****************************************************************************/
+    diff = clock() - start;
+    int msec = diff * 1000/ CLOCKS_PER_SEC;
+    printf("Time taken: %d seconds %d milliseconds\n", msec/1000, msec%1000);
 
     outputImage(OUTIMAGE, image8, image32, width, height, 0);
     free(image8);

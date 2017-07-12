@@ -5,6 +5,9 @@
 #ifndef IMAGEPROCESSING_PREPROC_H
 #define IMAGEPROCESSING_PREPROC_H
 
+/*
+ * Various image processing algorithms.
+ */
 
 /**
  * Converts 32 bit RGBA image to 8-bit grayscale image.

@@ -31,6 +31,8 @@ stdio.h
 -
 stdlib.h
 -
+time.h
+-
 includes/lodepng.h
 /Users/ericlei/documents/ImageProcessing/includes/lodepng.h
 sources/lodepng.c

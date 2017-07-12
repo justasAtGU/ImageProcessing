@@ -1,6 +1,9 @@
 //
 // Created by Eric Lei on 7/4/17.
 //
+/*
+ * Implements canny edge detection. Requires Sobel filtering which is implemented in preproc.c
+ */
 
 #ifndef IMAGEPROCESSING_CANNY_H
 #define IMAGEPROCESSING_CANNY_H

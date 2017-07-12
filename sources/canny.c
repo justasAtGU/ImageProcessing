@@ -41,7 +41,7 @@ int * edgeMagnitude(int* horizGx, int *vertGy, int width, int height)
     int * magnitude = (int *) malloc(width*height*4);
     for (int i = 0; i < width * height; i++)
     {
-        magnitude[i] = (int) (fabs(horizGx[i]) + fabs(vertGy[i]));
+        magnitude[i] = (int) (abs(horizGx[i]) + abs(vertGy[i]));
         //printf("Magnitude: %d\n", magnitude[i]);
     }
     return magnitude;
