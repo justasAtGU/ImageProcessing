@@ -88,7 +88,6 @@ int main(int argc, char *argv[])
 
     /* Perform image processing here********************************************/
     grayscale(image32, image8, width, height);
-
     //decimate(image8, &width, &height);
     detectEdgeCanny(image8, tempBuf, &width, &height);
     //dilate(image8, tempBuf, width, height);

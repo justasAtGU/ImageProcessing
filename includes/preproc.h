@@ -72,6 +72,8 @@ int * sobelHoriz(unsigned char * image8, unsigned * width, unsigned * height);
 
 int * sobelVert(unsigned char * image8, unsigned * width, unsigned * height);
 
+
+
 void avgPool();
 
 

@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <string.h>
 
+unsigned HIGH_THRESH = 200;
+unsigned LOW_THRESH = 25;
+
 int isNotMax(int leftNeighbor, int pixel, int rightNeighbor); /*returns 1 if pixel is not max, 0 otherwise*/
 
 int * edgeDirection(int* horizGx, int * vertGy, int width, int height)
@@ -135,7 +138,7 @@ int isNotMax(int leftNeighbor, int pixel, int rightNeighbor)
     return 0;
 }
 
-void doubleThreshold(unsigned char * image8, int * magnitude, int *width, int *height)
+void doubleThreshold(unsigned char * image8, int *width, int *height)
 {
     int magIndex = *width + 1;
     int imageIndex = 0;
@@ -147,6 +150,8 @@ void doubleThreshold(unsigned char * image8, int * magnitude, int *width, int *h
             val = image8[magIndex];
             if (val <= LOW_THRESH)
                 val = 0;
+            else
+                val = 255;
 //            if (val >= HIGH_THRESH)
 //                val = 255;
             image8[imageIndex] = val;
@@ -159,8 +164,68 @@ void doubleThreshold(unsigned char * image8, int * magnitude, int *width, int *h
     *height = *height - 2;
 }
 
+void hysteresis(unsigned char * image8, int *width, int *height)
+{
+    int * magnitude = (int*) malloc((*width)*(*height)*4);
+
+
+    int val;
+    //Sets high threshold to 255
+    for (int i = 0; i < (*width)*(*height); i++)
+    {
+        if (image8[i] >= 0)
+            magnitude[i] = 255;
+        else
+            magnitude[i] = 0;
+    }
+
+    int magIndex = *width + 1;
+    int imageIndex = 0;
+
+    for (int row = 1; row < *height-1; row++)
+    {
+        for (int col = 1; col < *width-1; col++)
+        {
+            val = image8[magIndex];
+            if (val < HIGH_THRESH && val != 0)
+            {
+                if (magnitude[magIndex-1] == 255 || magnitude[magIndex-(*width)-1] == 255 || magnitude[magIndex-(*width)] == 255
+                        || magnitude[magIndex-(*width)+1] == 255 || magnitude[magIndex+1] == 255 || magnitude[magIndex+(*width)+1] == 255
+                        || magnitude[magIndex+(*width)] == 255 || magnitude[magIndex+(*width)-1] == 255)
+                {
+                    val = 255;
+                }
+                else
+                    val = 0;
+            }
+            image8[imageIndex] = val;
+            magIndex++;
+            imageIndex++;
+        }
+        magIndex += 2;
+    }
+    *width = *width - 2;
+    *height = *height - 2;
+}
+
+unsigned char averagePixel(unsigned char * image8, unsigned width, unsigned height)
+{
+    unsigned sum = 0;
+    for (int i = 0; i < width*height; i++)
+    {
+        sum += image8[i];
+    }
+    sum /= (width*height);
+    return (unsigned char) sum;
+}
+
 void detectEdgeCanny(unsigned char * image8, unsigned char * tempBuf, int *width, int *height)
 {
+    unsigned char avg = averagePixel(image8, *width, *height);
+    avg = 2*avg/4;
+    printf("%d\n", avg);
+    LOW_THRESH = 84 * avg / 64;
+    HIGH_THRESH = 42 * avg / 64;
     gaussBlur5x5(image8, tempBuf, width, height); //Apply Gaussian smoothing
     int * Gx = sobelHoriz(image8, width, height); //x-direction gradient from Sobel filter
     int * Gy = sobelVert(image8, width, height); //y-direction gradient from Sobel filter
@@ -169,7 +234,7 @@ void detectEdgeCanny(unsigned char * image8, unsigned char * tempBuf, int *width
     int * direction = edgeDirection(Gx, Gy, *width, *height); //buffer stores direction of gradient
     int * magnitude = edgeMagnitude(Gx, Gy, *width, *height); //buffer stores magnitude of gradient
     nonMaxSuppress(image8, magnitude, direction, *width, *height); //Apply non-maximum suppression
-    doubleThreshold(image8, direction, width, height); //Apply double thresholding
+    doubleThreshold(image8, width, height); //Apply double thresholding
 
     free(Gx);
     free(Gy);

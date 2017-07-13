@@ -295,3 +295,4 @@ int * sobelVert(unsigned char * image8, unsigned * width, unsigned * height)
     }
     return Gy;
 }
+

@@ -8,8 +8,7 @@
 #ifndef IMAGEPROCESSING_CANNY_H
 #define IMAGEPROCESSING_CANNY_H
 
-#define HIGH_THRESH 155
-#define LOW_THRESH 22
+
 #define PI 3.1415926
 
 /*
@@ -35,7 +34,14 @@ void nonMaxSuppress(unsigned char * image8, int * magnitude, int * direction, in
  * Filters out non-edges (below threshold).
  * Reduces height and width by 2, removes border.
  */
-void doubleThreshold(unsigned char * image8, int * magnitude, int *width, int *height);
+void doubleThreshold(unsigned char * image8, int *width, int *height);
+
+void hysteresis(unsigned char * image8, int *width, int *height);
+
+/*
+ * Returns average of edge values after NMS.
+ */
+unsigned char averagePixel(unsigned char * image8, unsigned width, unsigned height);
 
 /*
  * Uses Canny's algorithm for edge detection.
