@@ -12,6 +12,10 @@ CMakeFiles/ImageProcessing.dir/sources/canny.c.o: ../includes/canny.h
 CMakeFiles/ImageProcessing.dir/sources/canny.c.o: ../includes/preproc.h
 CMakeFiles/ImageProcessing.dir/sources/canny.c.o: ../sources/canny.c
 
+CMakeFiles/ImageProcessing.dir/sources/hough.c.o: ../includes/canny.h
+CMakeFiles/ImageProcessing.dir/sources/hough.c.o: ../includes/hough.h
+CMakeFiles/ImageProcessing.dir/sources/hough.c.o: ../sources/hough.c
+
 CMakeFiles/ImageProcessing.dir/sources/pgma.c.o: ../includes/pgma.h
 CMakeFiles/ImageProcessing.dir/sources/pgma.c.o: ../sources/pgma.c
 

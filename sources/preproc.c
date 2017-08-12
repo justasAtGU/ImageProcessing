@@ -15,7 +15,7 @@ void grayscale(unsigned char *image32, unsigned char *image8, unsigned int width
     unsigned int grayIndex = 0;
     for (int i = 0; i < width * height * 4; i+=4)
     {
-        unsigned char avgVal = (306 * image32[i] + 601 * image32[i+1] + 117 * image32[i+2])/1024;
+        unsigned char avgVal = (unsigned char)((306 * (int)image32[i] + 601 * image32[i+1] + 117 * image32[i+2])/1024);
         image8[grayIndex] = avgVal;
         grayIndex++;
     }

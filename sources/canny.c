@@ -167,8 +167,6 @@ void doubleThreshold(unsigned char * image8, int *width, int *height)
 void hysteresis(unsigned char * image8, int *width, int *height)
 {
     int * magnitude = (int*) malloc((*width)*(*height)*4);
-
-
     int val;
     //Sets high threshold to 255
     for (int i = 0; i < (*width)*(*height); i++)
@@ -214,6 +212,7 @@ unsigned char averagePixel(unsigned char * image8, unsigned width, unsigned heig
     for (int i = 0; i < width*height; i++)
     {
         sum += image8[i];
+        //printf("%d\n", sum);
     }
     sum /= (width*height);
     return (unsigned char) sum;

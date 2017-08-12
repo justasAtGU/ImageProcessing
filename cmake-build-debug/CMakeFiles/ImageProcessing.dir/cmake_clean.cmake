@@ -3,6 +3,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/ImageProcessing.dir/sources/preproc.c.o"
   "CMakeFiles/ImageProcessing.dir/sources/pgma.c.o"
   "CMakeFiles/ImageProcessing.dir/sources/canny.c.o"
+  "CMakeFiles/ImageProcessing.dir/sources/hough.c.o"
   "ImageProcessing.pdb"
   "ImageProcessing"
 )
