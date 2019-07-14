@@ -84,6 +84,8 @@ int main(int argc, char *argv[])
     unsigned char* image8 = (unsigned char*) malloc(width*height); //used for grayscale image
     unsigned char* tempBuf = (unsigned char*) malloc(width*height*4); //used to store values in
 
+    printf("width %d, height%d\n", width, height);
+
     clock_t start = clock(), diff;
 
     /* Perform image processing here********************************************/

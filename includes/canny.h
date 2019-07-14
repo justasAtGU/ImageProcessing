@@ -8,7 +8,6 @@
 #ifndef IMAGEPROCESSING_CANNY_H
 #define IMAGEPROCESSING_CANNY_H
 
-
 #define PI 3.1415926
 
 /*

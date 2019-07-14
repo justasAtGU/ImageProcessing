@@ -9,7 +9,7 @@
 #include <string.h>
 
 unsigned HIGH_THRESH = 200;
-unsigned LOW_THRESH = 25;
+unsigned LOW_THRESH = 50;
 
 int isNotMax(int leftNeighbor, int pixel, int rightNeighbor); /*returns 1 if pixel is not max, 0 otherwise*/
 
@@ -60,6 +60,8 @@ void nonMaxSuppress(unsigned char * image8, int * magnitude, int * direction, in
         for (int col = 1; col < width-1; col++)
         {
             int currPixel = rowIndex + col;
+            
+            
             //horizontal axis
             if ((direction[currPixel] <= 22 && direction[currPixel] >= -22) || (direction[currPixel] >= 158 ||
                                                                                 direction[currPixel] <= -158))
@@ -220,12 +222,11 @@ unsigned char averagePixel(unsigned char * image8, unsigned width, unsigned heig
 
 void detectEdgeCanny(unsigned char * image8, unsigned char * tempBuf, int *width, int *height)
 {
-    unsigned char avg = averagePixel(image8, *width, *height);
-    avg = 2*avg/4;
-    printf("%d\n", avg);
-    LOW_THRESH = 84 * avg / 64;
-    HIGH_THRESH = 42 * avg / 64;
-    gaussBlur5x5(image8, tempBuf, width, height); //Apply Gaussian smoothing
+    //unsigned char avg = averagePixel(image8, *width, *height);
+    //avg = 2*avg/4;
+    //LOW_THRESH = 84 * avg / 64;
+    //HIGH_THRESH = 42 * avg / 64;
+    //gaussBlur5x5(image8, tempBuf, width, height); //Apply Gaussian smoothing
     int * Gx = sobelHoriz(image8, width, height); //x-direction gradient from Sobel filter
     int * Gy = sobelVert(image8, width, height); //y-direction gradient from Sobel filter
     *width = *width -2;
@@ -233,7 +234,8 @@ void detectEdgeCanny(unsigned char * image8, unsigned char * tempBuf, int *width
     int * direction = edgeDirection(Gx, Gy, *width, *height); //buffer stores direction of gradient
     int * magnitude = edgeMagnitude(Gx, Gy, *width, *height); //buffer stores magnitude of gradient
     nonMaxSuppress(image8, magnitude, direction, *width, *height); //Apply non-maximum suppression
-    doubleThreshold(image8, width, height); //Apply double thresholding
+    //doubleThreshold(image8, width, height); //Apply double thresholding
+    //hysteresis(image8, width, height);
 
     free(Gx);
     free(Gy);
