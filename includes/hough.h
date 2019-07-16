@@ -12,14 +12,20 @@ typedef struct {
    int y;
 } Point;
 
+typedef struct {
+   Point p1;
+   Point p2;
+} Line;
+
 typedef struct
 {
 	float data;
 	size_t limit;
 	size_t current;
-} Vector;
+} Trig;
 
 void houghTransform(unsigned char * image, int width, int height, int thresh, int lineLength,
- int lineGap, int linesMax, float rho, float theta, Vector lines[4]);
+ int lineGap, int linesMax, float rho, float theta, Line *lines);
 
+void drawLines(unsigned char * image, Line *lines, int width, int height);
 #endif //IMAGEPROCESSING_HOUGH_H

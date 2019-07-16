@@ -5,28 +5,30 @@
 #include <time.h>
 
 #include "../includes/hough.h"
+#include "../includes/vector.h"
 
 void houghTransform(unsigned char* image, int width, int height, int thresh, int lineLength,
- int lineGap, int linesMax, float rho, float theta, Vector lines[4])
+ int lineGap, int linesMax, float rho, float theta, Line *lines)
 {	
 	// PPHT Step 1: Return if empty
 	if ((!image)) {
 		printf("Image is empty. Cannot perform PPHT\n");
 		return;
 	} 
+	unsigned char* out = (unsigned char*) malloc(width*height);
+	int line_count = 0;
 	
 	// Initialize rho and theta
 	float irho = 1/rho;
 	int num_theta = round(PI/theta); 
 	int num_rho = round(((width + height) * 2 + 1) / rho);
-
 	//printf("num theta %d", num_theta);
 	// Initialize and fill accumulator with zeros
 	int acc [num_rho][num_theta];
 	memset(acc, 0, num_rho*num_theta*sizeof(int));
 
 	// Create vector holding trigonometry functions
-    Vector trigtab[num_theta*2];
+    Trig trigtab[num_theta*2];
     for(int n = 0; n < num_theta; n++)
     {
         trigtab[n*2].data = (cos((double)n*theta) * irho);
@@ -36,56 +38,89 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
     
 	// Initialize randomizer, used to get random pixel
 	srand(time(NULL));
-	
-	// Initialize positions for pixels
-	int length = width * height;
-	int pixel_x, pixel_y, pos;
+	int pos;
 
 	int max_value = thresh - 1;
 	unsigned char* mdata0 = (unsigned char*) malloc(width*height); //used to store values in
 
-	// Collect edges
-	for (int i = 0; i < length; i++)
+	// Collect edges	
+	Point *nzloc = NULL;
+	for (int i = 0; i < width; i++)
 	{
-		if (image[i] == 255)
+		for (int j = 0; j < height; j++)
 		{
-			mdata0[i] = image[i];
+			if (image[j*width + i] > thresh)
+			{
+				mdata0[j*width + i] = 255;
+				Point temp;
+				temp.x = i;
+				temp.y = j;
+				vector_push_back(nzloc, temp);
+			}
+			else
+			{
+				mdata0[j*width + i] = 0;
+			}
+			out[j*width + i] = 0;
 		}
-		
 	}
-	
-	for (; length > 0; length--)
+	int t;
+			FILE *file;
+			file = fopen("mdata.pgm", "wb");
+			fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
+			fwrite(mdata0, width*height, 1, file);
+	/*
+	for (int i = 0; i < width * height; i++)
+	{
+		if (image[i] > 100)
+		{
+			mdata0[i] = 255;
+			Point temp;
+			temp.x = i % width;
+			temp.y = i / width;
+			vector_push_back(nzloc, temp);
+		}
+		else
+		{
+			mdata0[i] = 0;
+		}
+		out[i] = 0;
+	}*/
+	int count = vector_size(nzloc);
+
+    printf("NZLOC count %d\n", count);
+	for (; count > 0; count--)
 	{	
 		int max_theta = 0;
 		
 		// PPHT Step 2: Randomly select pixel from input image.
-		pos = rand() % length;
+		pos = rand() % count;
+		Point point = nzloc[pos];
+		int j = point.x;
+		int i = point.y;
+		//printf("Point.x %d, Point.y %d\n", point.x, point.y);
+		// PPHT Step 3: Remove pixel, by overriding with last value
+		nzloc[pos] = nzloc[count - 1];
 		
 		// Skip black pixels
-		if (image[pos] != 255) 
+		if (mdata0[i*width + j] <= 0) 
 		{
 			continue;	
 		}
-		
-		// Get pixel postions, in terms of rows and coloumns
-		pixel_x = pos % width;
-		pixel_y = pos / width;
+	
 
         // Check if it has been excluded already
-        if (!mdata0[pos])
+        if (!mdata0[i*width + j])
         {
             continue;
         }
-        
-        //printf("past exclussion\n"); 
-        
-		// PPHT Step 3: Remove pixel, by overriding with last value
-		image[pos] = image[length];
+                
+		
 		
 		// Map pixel to accumulator
 		for (int n = 0; n < num_theta; n++)//, adata += num_rho)
 		{
-			int rho_temp = round(pixel_x * ttab[n*2] + pixel_y * ttab[n*2+1]);
+			int rho_temp = round(j * ttab[n*2] + i * ttab[n*2+1]);
             rho_temp += (num_rho - 1) / 2;
             //float rho_f = (pixel_x * cos(n)) + (pixel_y * sin(n));
 
@@ -114,14 +149,10 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 				
 		float a = -ttab[max_theta*2+1];
         float b = ttab[max_theta*2];
-        int i = pixel_y, j = pixel_x, k, x0, y0, dx0, dy0, xflag;
+        int k, x0, y0, dx0, dy0, xflag;
         int good_line;
         const int shift = 16;
         Point line_end[2];
-        line_end[0].x = 0;
-        line_end[1].x = 0;
-        line_end[0].y = 0;
-        line_end[1].y = 0;
         x0 = j;
         y0 = i;
         
@@ -293,46 +324,71 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
         //printf("pass entire second for loop\n");
 
         if (good_line)
-        {	
-			unsigned char* out = (unsigned char*) malloc(width*height);
-			out += line_end[0].x;
-			out += line_end[0].y;
-			out += line_end[1].x;
-			out += line_end[1].y;
-			//Vector lines[4];
-            //Vec4i lr(line_end[0].x, line_end[0].y, line_end[1].x, line_end[1].y);
-            lines[0].data =line_end[0].x;
-            lines[1].data =line_end[0].y;
-            lines[2].data =line_end[1].x;
-            lines[3].data =line_end[1].y;
-
-			image = out;
-			printf("l0x %d l0y %d l1x %d l1y %d\n", line_end[0].x, line_end[0].y, line_end[1].x, line_end[1].y);
-			printf("outty %s\n", out);
-            //lines.push_back(lr);
-            if (lines->current >= linesMax)
+        {
+			out[width * line_end[0].y + line_end[0].x] = 255;
+			out[width * line_end[1].y + line_end[1].x] = 255;
+			Line line;
+			line.p1.x = line_end[0].x;
+			line.p1.y = line_end[0].y;
+			line.p2.x = line_end[1].x;
+			line.p2.y = line_end[1].y;
+			vector_push_back(lines, line);
+            if (vector_size(lines) >= linesMax)
             {
-				
-				printf("final good line in if with return\n");
+				drawLines(out, lines, width, height);
                 return;
 			}
         }
-        
-        //printf("pass final if goodline\n");
-
-		
-		// Step 5: Look along the corridor in the accumulator
-		//for( int n = 0; n < numangle; n++ )
-		//{
-		//	trigtab[n*2] = (float)(cos((double)n*theta) * irho);
-		//	trigtab[n*2+1] = (float)(sin((double)n*theta) * irho);
-		//}
-		//const float* ttab = &trigtab[0];
-		// a = -ttab[max_n*2+1];
-		// b = ttab[max_n*2];
-		
-
-	}
-	//image = (unsigned char*)adata;
-	     
+	}	     
 }
+
+void drawLines(unsigned char* image, Line *lines, int width, int height)
+{
+	printf("vector size %d", vector_size(lines));
+
+	for (int i = 0; i < vector_size(lines); i++)
+	{
+		int pos1 = lines[i].p1.y*width + lines[i].p1.x;
+		int pos2 = lines[i].p2.y*width + lines[i].p2.x;
+		while(pos1 != pos2)
+		{
+			image[pos1] = 155;
+				
+			if (lines[i].p1.x == lines[i].p2.x)
+			{
+				//Skip
+			}
+			else if (lines[i].p1.x > lines[i].p2.x)
+			{
+				lines[i].p1.x--;
+			}
+			else if (lines[i].p1.x < lines[i].p2.x){
+				lines[i].p1.x++;
+			}
+
+			if (lines[i].p1.y == lines[i].p2.y)
+			{
+				//Skip
+			}
+			else if (lines[i].p1.y > lines[i].p2.y)
+			{
+				lines[i].p1.y--;
+			}
+			else if (lines[i].p1.y < lines[i].p2.y){
+				lines[i].p1.y++;
+			}
+
+			pos1 = lines[i].p1.y*width + lines[i].p1.x;
+		}
+	}
+
+	
+
+	int t;
+	FILE *file;
+	file = fopen("out.pgm", "wb");
+	fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
+	fwrite(image, width*height, 1, file);
+
+}
+
