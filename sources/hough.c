@@ -6,25 +6,25 @@
 
 #include "../includes/hough.h"
 #include "../includes/vector.h"
+#include "../includes/distance.h"
 
 void houghTransform(unsigned char* image, int width, int height, int thresh, int lineLength,
- int lineGap, int linesMax, float rho, float theta, Line *lines)
+ int lineGap, int linesMax, float rho, float theta)
 {	
 	// PPHT Step 1: Return if empty
 	if ((!image)) {
 		printf("Image is empty. Cannot perform PPHT\n");
 		return;
 	} 
-	unsigned char* out = (unsigned char*) malloc(width*height);
-	int line_count = 0;
 	
 	// Initialize rho and theta
 	float irho = 1/rho;
-	int num_theta = round(PI/theta); 
+	int num_theta = round(PI/theta);
+	//int num_rho = sqrt((width * width) + (height * height));//round(((width + height) * 2 + 1) / rho);
 	int num_rho = round(((width + height) * 2 + 1) / rho);
-	//printf("num theta %d", num_theta);
+	//printf("num rho %d vs rho cv %d\n", num_rho, rho_cv);
 	// Initialize and fill accumulator with zeros
-	int acc [num_rho][num_theta];
+	int acc [num_theta][num_rho];
 	memset(acc, 0, num_rho*num_theta*sizeof(int));
 
 	// Create vector holding trigonometry functions
@@ -41,38 +41,15 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 	int pos;
 
 	int max_value = thresh - 1;
-	unsigned char* mdata0 = (unsigned char*) malloc(width*height); //used to store values in
+	unsigned char* mdata0 = (unsigned char*) malloc(width*height);
+	Line *lines = NULL;
 
 	// Collect edges	
 	Point *nzloc = NULL;
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			if (image[j*width + i] > thresh)
-			{
-				mdata0[j*width + i] = 255;
-				Point temp;
-				temp.x = i;
-				temp.y = j;
-				vector_push_back(nzloc, temp);
-			}
-			else
-			{
-				mdata0[j*width + i] = 0;
-			}
-			out[j*width + i] = 0;
-		}
-	}
-	int t;
-			FILE *file;
-			file = fopen("mdata.pgm", "wb");
-			fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
-			fwrite(mdata0, width*height, 1, file);
-	/*
 	for (int i = 0; i < width * height; i++)
 	{
-		if (image[i] > 100)
+		// Filter out weaker edges again
+		if (image[i] > 50)
 		{
 			mdata0[i] = 255;
 			Point temp;
@@ -84,48 +61,41 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 		{
 			mdata0[i] = 0;
 		}
-		out[i] = 0;
-	}*/
+		image[i] = 0;
+	}
+	int t;
+	FILE *file;
+	file = fopen("hough.pgm", "wb");
+	fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
+	fwrite(mdata0, width*height, 1, file);
+
 	int count = vector_size(nzloc);
 
-    printf("NZLOC count %d\n", count);
 	for (; count > 0; count--)
-	{	
-		int max_theta = 0;
-		
+	{			
 		// PPHT Step 2: Randomly select pixel from input image.
 		pos = rand() % count;
 		Point point = nzloc[pos];
 		int j = point.x;
 		int i = point.y;
-		//printf("Point.x %d, Point.y %d\n", point.x, point.y);
+
 		// PPHT Step 3: Remove pixel, by overriding with last value
 		nzloc[pos] = nzloc[count - 1];
 		
-		// Skip black pixels
-		if (mdata0[i*width + j] <= 0) 
-		{
-			continue;	
-		}
-	
-
-        // Check if it has been excluded already
+        // Check if pixel has been excluded already
         if (!mdata0[i*width + j])
         {
             continue;
         }
-                
-		
-		
+
 		// Map pixel to accumulator
-		for (int n = 0; n < num_theta; n++)//, adata += num_rho)
+		int max_theta = 0;
+		for (int n = 0; n < num_theta; n++)
 		{
-			int rho_temp = round(j * ttab[n*2] + i * ttab[n*2+1]);
+			int rho_temp = round((j * ttab[n*2]) + (i * ttab[n*2+1]));
             rho_temp += (num_rho - 1) / 2;
-            //float rho_f = (pixel_x * cos(n)) + (pixel_y * sin(n));
-
-            int val = ++acc[rho_temp][n];
-
+            rho_temp = round((j * cos(n)) + (i * sin(n)));
+			int val = ++acc[n][rho_temp];
             //printf("num_rho %d temp_rho %d num_theta %d n_theta %d\n", num_rho, rho_temp, num_theta, n);
 			//int val = 1;//acc[rho_temp][n]++;
 			// Round sin and cos for integer operations
@@ -138,9 +108,16 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 			{
 				max_value = val;
 				max_theta = n;
+				printf("rho %d max theta %d max value %d\n", rho_temp, max_theta, max_value);
+
 			}
 		}
-
+	
+		if (max_theta != 0 && max_theta != 1)
+		{
+			printf("NOT STATEMENT max theta %d\n", max_theta);
+		}
+		
 		// PPHT STEP 4: Skip if max value in accumulator is lower than threshold
 		if (max_value < thresh)
 		{
@@ -156,8 +133,6 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
         x0 = j;
         y0 = i;
         
-		//printf("pass flaot\n");
-
         if( fabs(a) > fabs(b) )
         {
             xflag = 1;
@@ -173,8 +148,6 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
             x0 = (x0 << shift) + (1 << (shift-1));
         }
         
-        //printf("pass abs if else\n");
-
         for (k = 0; k < 2; k++)
         {
             int gap = 0, x = x0, y = y0, dx = dx0, dy = dy0;
@@ -184,8 +157,6 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
                 dx = -dx, dy = -dy;
 			}
 			
-			//printf("pass if k > 0 dx %d dy %d\n", dx, dy);
-
             // walk along the line using fixed-point arithmetics,
             // stop at the image border or in case of too big gap
             for( ;; x += dx, y += dy )
@@ -204,14 +175,12 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
                     i1 = y;
 
                 }
-				//printf("i1 %d j1 %d\n", i1, j1);
 
 				// Check if exceeding image bounds
                 if (j1 < 0 || j1 >= width || i1 < 0 || i1 >= height)
                 {
                     break;
 				}
-				//printf("j1 %d i1 %d after bouunds? \n", j1, i1);
 
                 mdata = mdata0 + i1*width + j1;
 
@@ -224,13 +193,10 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
                     gap = 0;
                     line_end[k].y = i1;
                     line_end[k].x = j1;
-                    //printf("macarena j1 %d i1 %d k %d\n", j1, i1, k);
 
                 }
                 else if (++gap > lineGap)
                 {
-					//printf("no macarena j1 %d i1 %d k %d\n", j1, i1, k);
-
                     break;
                 }
             }
@@ -238,8 +204,6 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 
         good_line = (abs(line_end[1].x - line_end[0].x) >= lineLength ||
                     abs(line_end[1].y - line_end[0].y) >= lineLength);
-		
-		//printf("good line = %d line ends = %d %d %d %d \n", good_line, line_end[0].x, line_end[0].y, line_end[1].x, line_end[1].y);
 
 		for (k = 0; k < 2; k++)
         {
@@ -250,8 +214,6 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
                 dx = -dx, dy = -dy;
 			}
 			
-			//printf("pass again k > 0 k = %d\n", k);
-
             // walk along the line using fixed-point arithmetics,
             // stop at the image border or in case of too big gap
             for( ;; x += dx, y += dy )
@@ -269,8 +231,6 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
                 {
                     j1 = x >> shift;
                     i1 = y;
-                    //printf("j1 %d i1 %d\n", j1, i1);
-
                 }
 
                 mdata = mdata0 + i1*width + j1;
@@ -280,62 +240,55 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
                 //    reset the gap
                 if (*mdata)
                 {
-					//printf("pass if m data \n");
-					//printf("good line\n");
-
                     if (good_line)
                     {
-						//printf("pass if good line. \n");
-
-                        //adata = (int*)image;
-                        for (int n = 0; n < num_theta; n++)//, adata += num_rho )
+                        for (int n = 0; n < theta; n++)
                         {
-                            int rho_temp = round(j1 * ttab[n*2] + i1 * ttab[n*2+1]);
-                            rho_temp += (num_rho - 1) / 2;                            
-                            acc[rho_temp][n]--;
-                            int vall =  acc[rho_temp][n];
 
+							int rho_temp = round((j * ttab[n*2]) + (i * ttab[n*2+1]));
+                            rho_temp += (num_rho - 1) / 2;       
+							rho_temp = round((j * cos(n)) + (i * sin(n)));
+                     
+                            acc[n][rho_temp]--;
                         }
-                        //int vally = 1;
-						//printf("pass for loop acccccc\n");
-
-                    }
-					//printf("pre mdata = 0\n");
-                    
+                    }                    
                     *mdata = 0;
-
-					//printf("pass mdata = 0\n");
-
                 }
-				//printf("pre if line end statement\n");
 
                 if (i1 == line_end[k].y && j1 == line_end[k].x)
                 {
-					//printf("in line end if \n\n\n");
                     break;
                 }
-                //printf("i1 %d line y %d j1 %d line x %d \n", i1, line_end[k].y, j1, line_end[k].x);
-
             }
-            //printf("post ; ; dx dy loop\n");
-
         }
         
-        //printf("pass entire second for loop\n");
-
         if (good_line)
         {
-			out[width * line_end[0].y + line_end[0].x] = 255;
-			out[width * line_end[1].y + line_end[1].x] = 255;
+			image[width * line_end[0].y + line_end[0].x] = 255;
+			image[width * line_end[1].y + line_end[1].x] = 255;
+			
 			Line line;
 			line.p1.x = line_end[0].x;
 			line.p1.y = line_end[0].y;
 			line.p2.x = line_end[1].x;
 			line.p2.y = line_end[1].y;
 			vector_push_back(lines, line);
+			drawLines(image, lines, width, height);
+			int t;
+			FILE *file;
+			file = fopen("out.pgm", "wb");
+			fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
+			fwrite(image, width*height, 1, file);
             if (vector_size(lines) >= linesMax)
             {
-				drawLines(out, lines, width, height);
+				//Test draw diagonal line
+				Line line1;
+				line1.p1.x = 240;
+				line1.p1.y = 61;
+				line1.p2.x = 221;
+				line1.p2.y = 81;
+				vector_push_back(lines, line1);
+				free(mdata0);
                 return;
 			}
         }
@@ -344,8 +297,6 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 
 void drawLines(unsigned char* image, Line *lines, int width, int height)
 {
-	printf("vector size %d", vector_size(lines));
-
 	for (int i = 0; i < vector_size(lines); i++)
 	{
 		int pos1 = lines[i].p1.y*width + lines[i].p1.x;
@@ -381,14 +332,6 @@ void drawLines(unsigned char* image, Line *lines, int width, int height)
 			pos1 = lines[i].p1.y*width + lines[i].p1.x;
 		}
 	}
-
 	
-
-	int t;
-	FILE *file;
-	file = fopen("out.pgm", "wb");
-	fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
-	fwrite(image, width*height, 1, file);
-
 }
 

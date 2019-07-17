@@ -6,6 +6,7 @@
 #include "includes/preproc.h"
 #include "includes/pgma.h"
 #include "includes/canny.h"
+#include "includes/hough.h"
 
 char IMAGE[50]; //preprocessed image. Takes in first program argument.
 char OUTIMAGE[50]; //postprocessed image (same as preprocessed but in imagesNew folder)
@@ -92,6 +93,7 @@ int main(int argc, char *argv[])
     grayscale(image32, image8, width, height);
     //decimate(image8, &width, &height);
     detectEdgeCanny(image8, tempBuf, &width, &height);
+    houghTransform(image8, width, height, 1, 10, 1, 10, 1, PI/180);
     //dilate(image8, tempBuf, width, height);
     //erode(image8, tempBuf, width, height);
     /****************************************************************************/
