@@ -9,33 +9,32 @@
 #include "../includes/distance.h"
 
 void houghTransform(unsigned char* image, int width, int height, int thresh, int lineLength,
- int lineGap, int linesMax, float rho, float theta)
+ int lineGap, int linesMax, float rho, float theta, int edge_thresh, int print)
 {	
 	// PPHT Step 1: Return if empty
 	if ((!image)) {
 		printf("Image is empty. Cannot perform PPHT\n");
 		return;
 	} 
-	
+
 	// Initialize rho and theta
 	float irho = 1/rho;
 	int num_theta = round(PI/theta);
 	//int num_rho = sqrt((width * width) + (height * height));//round(((width + height) * 2 + 1) / rho);
 	int num_rho = round(((width + height) * 2 + 1) / rho);
-	//printf("num rho %d vs rho cv %d\n", num_rho, rho_cv);
+	
 	// Initialize and fill accumulator with zeros
-	int acc [num_theta][num_rho];
+	int acc [num_rho][num_theta];
 	memset(acc, 0, num_rho*num_theta*sizeof(int));
 
 	// Create vector holding trigonometry functions
     Trig trigtab[num_theta*2];
     for(int n = 0; n < num_theta; n++)
-    {
-        trigtab[n*2].data = (cos((double)n*theta) * irho);
-        trigtab[n*2+1].data = (sin((double)n*theta) * irho);
+    {        
+        trigtab[n*2].data = (float)(cos((double)n*theta) * irho);
+        trigtab[n*2+1].data = (float)(sin((double)n*theta) * irho);
     }
-    const float* ttab = &trigtab[0].data;
-    
+
 	// Initialize randomizer, used to get random pixel
 	srand(time(NULL));
 	int pos;
@@ -49,7 +48,7 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 	for (int i = 0; i < width * height; i++)
 	{
 		// Filter out weaker edges again
-		if (image[i] > 50)
+		if (image[i] > edge_thresh)
 		{
 			mdata0[i] = 255;
 			Point temp;
@@ -63,11 +62,6 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 		}
 		image[i] = 0;
 	}
-	int t;
-	FILE *file;
-	file = fopen("hough.pgm", "wb");
-	fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
-	fwrite(mdata0, width*height, 1, file);
 
 	int count = vector_size(nzloc);
 
@@ -92,10 +86,10 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 		int max_theta = 0;
 		for (int n = 0; n < num_theta; n++)
 		{
-			int rho_temp = round((j * ttab[n*2]) + (i * ttab[n*2+1]));
+			int rho_temp = round((j * trigtab[n*2].data) + (i * trigtab[n*2+1].data));
             rho_temp += (num_rho - 1) / 2;
-            rho_temp = round((j * cos(n)) + (i * sin(n)));
-			int val = ++acc[n][rho_temp];
+            //rho_temp = round((j * cos(n)) + (i * sin(n)));
+			int val = ++acc[rho_temp][n];
             //printf("num_rho %d temp_rho %d num_theta %d n_theta %d\n", num_rho, rho_temp, num_theta, n);
 			//int val = 1;//acc[rho_temp][n]++;
 			// Round sin and cos for integer operations
@@ -108,14 +102,8 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 			{
 				max_value = val;
 				max_theta = n;
-				printf("rho %d max theta %d max value %d\n", rho_temp, max_theta, max_value);
-
+				//printf("rho %d max theta %d max value %d\n", rho_temp, max_theta, max_value);
 			}
-		}
-	
-		if (max_theta != 0 && max_theta != 1)
-		{
-			printf("NOT STATEMENT max theta %d\n", max_theta);
 		}
 		
 		// PPHT STEP 4: Skip if max value in accumulator is lower than threshold
@@ -124,8 +112,8 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 		    continue;
 		}
 				
-		float a = -ttab[max_theta*2+1];
-        float b = ttab[max_theta*2];
+		float a = -trigtab[max_theta*2+1].data;
+        float b = trigtab[max_theta*2].data;
         int k, x0, y0, dx0, dy0, xflag;
         int good_line;
         const int shift = 16;
@@ -245,11 +233,11 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
                         for (int n = 0; n < theta; n++)
                         {
 
-							int rho_temp = round((j * ttab[n*2]) + (i * ttab[n*2+1]));
+							int rho_temp = round((j * trigtab[n*2].data) + (i * trigtab[n*2+1].data));
                             rho_temp += (num_rho - 1) / 2;       
-							rho_temp = round((j * cos(n)) + (i * sin(n)));
+							//rho_temp = round((j * cos(n)) + (i * sin(n)));
                      
-                            acc[n][rho_temp]--;
+                            acc[rho_temp][n]--;
                         }
                     }                    
                     *mdata = 0;
@@ -273,21 +261,22 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 			line.p2.x = line_end[1].x;
 			line.p2.y = line_end[1].y;
 			vector_push_back(lines, line);
-			drawLines(image, lines, width, height);
-			int t;
-			FILE *file;
-			file = fopen("out.pgm", "wb");
-			fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
-			fwrite(image, width*height, 1, file);
+			
+			if (print)
+			{
+				FILE *file;
+				int t;
+				file = fopen("points.pgm", "wb");
+				fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
+				fwrite(image, width*height, 1, file);
+				//drawLines(image, lines, width, height);
+				file = fopen("out.pgm", "wb");
+				fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
+				fwrite(image, width*height, 1, file);
+			}
+			
             if (vector_size(lines) >= linesMax)
             {
-				//Test draw diagonal line
-				Line line1;
-				line1.p1.x = 240;
-				line1.p1.y = 61;
-				line1.p2.x = 221;
-				line1.p2.y = 81;
-				vector_push_back(lines, line1);
 				free(mdata0);
                 return;
 			}
