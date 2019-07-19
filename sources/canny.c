@@ -226,7 +226,7 @@ void detectEdgeCanny(unsigned char * image8, unsigned char * tempBuf, int *width
     //avg = 2*avg/4;
     //LOW_THRESH = 84 * avg / 64;
     //HIGH_THRESH = 42 * avg / 64;
-    //gaussBlur5x5(image8, tempBuf, width, height); //Apply Gaussian smoothing
+    gaussBlur5x5(image8, tempBuf, width, height); //Apply Gaussian smoothing
     int * Gx = sobelHoriz(image8, width, height); //x-direction gradient from Sobel filter
     int * Gy = sobelVert(image8, width, height); //y-direction gradient from Sobel filter
     *width = *width -2;

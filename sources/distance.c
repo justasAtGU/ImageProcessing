@@ -7,7 +7,7 @@
 #include "../includes/struct.h"
 #include "../includes/vector.h"
 
-void angleBetweenLines(Line *lines, int base_index, int line_count)
+void angleBetweenLines(Line *lines, int base_index, int line_count, int height)
 {
 	int count = 0;
 	int cone_height1, cone_height2;
@@ -41,17 +41,17 @@ void angleBetweenLines(Line *lines, int base_index, int line_count)
 			// Both slopes positive/negative, so lines may be parallel
 			else if ((m1 > 0 && m2 > 0) || (m1 < 0 && m2 < 0))
 			{
-				printf("Slopes parallel? m1 %f m2%f\n", m1, m2);
 				continue;
 			}
+            
 			// Slopes to different to belong to a cone
-			else if (abs(m2 - m1) >= 3)
+            // Replace with a thresh
+			else if (abs(m1) - abs(m2) >= 1.5)
 			{
-				printf("Slopes too different m1 %f m2%f. Difference %F \n", m1, m2, abs(m2 - m1));
+                float diff = abs(m1 - m2);
+				printf("Slopes too different m1 %f m2 %f. Difference %f \n", m1, m2, diff);
 				continue;
 			}
-
-			printf("slope m1 %f, at j%d m2 at i%d %f\n", m1, m2, j, i);
 
 			//Formula tan(theta) = |(m2-m1)/(1+(m2*m1)|
 			// Inversing formula to find angle
@@ -59,7 +59,7 @@ void angleBetweenLines(Line *lines, int base_index, int line_count)
 			printf("angle between lines %f\n", theta);
 
 			// Angle does not belong to top of cone
-			if (theta > 45)
+			if (theta > 60)
 			{
 				continue;
 			}
@@ -74,21 +74,11 @@ void angleBetweenLines(Line *lines, int base_index, int line_count)
 			vector_erase(lines, j);
 			vector_erase(lines, i);
 			line_count = vector_size(lines);
+            
+            float distance = (FOCAL_LENGTH * real_size * height) / (cone_height * SENSOR_HEIGHT);
+
+            printf("Distance %f (mm), %f (cm) and %f (m)\n", distance, distance / 100, distance / 1000);
+	
 		}
 	}
-}
-
-// Cone: 325mm, sensor and focal length refer to link;
-float distanceToCone(int real_size, Line *lines, int sensor_size, int focal_length, int height)
-{
-	float cone_sides[3];
-	int base;
-	//angleBetweenLines(lines, base);
-
-	int pixel_size = 1;
-	// Distance in mm
-	float distance = (focal_length * real_size * height) / (pixel_size * sensor_size);
-
-	printf("Distance (mm): and (m): %f\n", distance, distance / 1000);
-	
 }

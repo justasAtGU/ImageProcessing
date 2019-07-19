@@ -10,7 +10,7 @@
 #include "../includes/distance.h"
 
 void houghTransform(unsigned char* image, int width, int height, int thresh, int lineLength,
- int lineGap, int linesMax, float rho, float theta, int edge_thresh, int print)
+ int lineGap, int linesMax, int rho, int theta, int edge_thresh, int print)
 {	
 	// PPHT Step 1: Return if empty
 	if ((!image)) {
@@ -20,17 +20,16 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 
 	// Initialize rho and theta
 	float irho = 1/rho;
-	int num_theta = round(PI/theta);
+	//int num_theta = round(PI/theta);
 	//int num_rho = sqrt((width * width) + (height * height));//round(((width + height) * 2 + 1) / rho);
 	int num_rho = round(((width + height) * 2 + 1) / rho);
-
 	// Initialize and fill accumulator with zeros
-	int acc [num_rho][num_theta];
-	memset(acc, 0, num_rho*num_theta*sizeof(int));
+	int acc [num_rho][theta];
+	memset(acc, 0, num_rho*theta*sizeof(int));
 
 	// Create vector holding trigonometry functions
-    Trig trigtab[num_theta*2];
-    for(int n = 0; n < num_theta; n++)
+    Trig trigtab[theta*2];
+    for(int n = 0; n < theta; n++)
     {        
         trigtab[n*2].data = (float)(cos((double)n*theta) * irho);
         trigtab[n*2+1].data = (float)(sin((double)n*theta) * irho);
@@ -92,7 +91,7 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 
 		// Map pixel to accumulator
 		int max_theta = 0;
-		for (int n = 0; n < num_theta; n++)
+		for (int n = 0; n < theta; n++)
 		{
 			int rho_temp = round((j * trigtab[n*2].data) + (i * trigtab[n*2+1].data));
             rho_temp += (num_rho - 1) / 2;
@@ -260,32 +259,19 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
         
         if (good_line)
         {
-			image[width * line_end[0].y + line_end[0].x] = 255;
-			image[width * line_end[1].y + line_end[1].x] = 255;
-			
+			//image[width * line_end[0].y + line_end[0].x] = 255;
+			//image[width * line_end[1].y + line_end[1].x] = 255;
 			Line line;
 			line.p1.x = line_end[0].x;
 			line.p1.y = line_end[0].y;
 			line.p2.x = line_end[1].x;
 			line.p2.y = line_end[1].y;
-			vector_push_back(lines, line);
-			
-			if (print)
-			{
-				FILE *file;
-				int t;
-				file = fopen("points.pgm", "wb");
-				fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
-				fwrite(image, width*height, 1, file);
-				//drawLines(image, lines, width, height);
-				file = fopen("out.pgm", "wb");
-				fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
-				fwrite(image, width*height, 1, file);
-			}
-			
+			vector_push_back(lines, line);			
+
             if (vector_size(lines) >= linesMax)
             {
-            	angleBetweenLines(lines, 1, linesMax);
+				drawLines(image, lines, width, height, print);
+            	angleBetweenLines(lines, 1, linesMax, height);
 				free(mdata0);
                 return;
 			}
@@ -293,43 +279,48 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 	}	     
 }
 
-void drawLines(unsigned char* image, Line *lines, int width, int height)
+void drawLines(unsigned char* image, Line *lines, int width, int height, int print_file)
 {
+	// Draw all found lines
 	for (int i = 0; i < vector_size(lines); i++)
 	{
-		int pos1 = lines[i].p1.y*width + lines[i].p1.x;
-		int pos2 = lines[i].p2.y*width + lines[i].p2.x;
-		while(pos1 != pos2)
-		{
-			image[pos1] = 155;
-				
-			if (lines[i].p1.x == lines[i].p2.x)
-			{
-				//Skip
-			}
-			else if (lines[i].p1.x > lines[i].p2.x)
-			{
-				lines[i].p1.x--;
-			}
-			else if (lines[i].p1.x < lines[i].p2.x){
-				lines[i].p1.x++;
-			}
+		// Line points
+		int x1 = lines[i].p1.x;
+		int y1 = lines[i].p1.y;
+		int x2 = lines[i].p2.x;
+		int y2 = lines[i].p2.y;
+		
+		int dx = abs(x2 - x1), sx = x1 < x2 ? 1 : -1;
+		int dy = abs(y2 - y1), sy = y1 < y2 ? 1 : -1; 
+		int err = (dx > dy ? dx : -dy) /2, e2;
 
-			if (lines[i].p1.y == lines[i].p2.y)
+		for(;;){
+			image[y1*width + x1] = 255;
+			if (x1 == x2 && y1 == y2) 
 			{
-				//Skip
+				break;
 			}
-			else if (lines[i].p1.y > lines[i].p2.y)
-			{
-				lines[i].p1.y--;
+			e2 = err;
+			if (e2 >-dx) 
+			{ 
+				err -= dy; 
+				x1 += sx; 
 			}
-			else if (lines[i].p1.y < lines[i].p2.y){
-				lines[i].p1.y++;
+			if (e2 < dy) 
+			{ 
+				err += dx; 
+				y1 += sy; 
 			}
-
-			pos1 = lines[i].p1.y*width + lines[i].p1.x;
 		}
 	}
-	
+	if (print_file)
+	{	
+		FILE *file;
+		int t;
+		file = fopen("lines.pgm", "wb");
+		fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
+		fwrite(image, width*height, 1, file);
+	}
 }
+
 

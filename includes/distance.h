@@ -4,11 +4,10 @@
 #include "vector.h"
 #include "struct.h"
 
-#define PI 3.1415926
+#define PI              3.1415926
+#define FOCAL_LENGTH    3.04 
+#define SENSOR_HEIGHT   2.760
 
-void angleBetweenLines(Line *lines, int base_index, int line_count);
-
-float distanceToCone(int real_size, Line *lines, int sensor_size, int focal_length, int heigth);
-
+void angleBetweenLines(Line *lines, int base_index, int line_count, int height);
 
 #endif //IMAGEPROCESSING_DISTANCE_H
