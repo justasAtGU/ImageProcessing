@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "../includes/struct.h"
 #include "../includes/hough.h"
 #include "../includes/vector.h"
 #include "../includes/distance.h"
@@ -22,7 +23,7 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 	int num_theta = round(PI/theta);
 	//int num_rho = sqrt((width * width) + (height * height));//round(((width + height) * 2 + 1) / rho);
 	int num_rho = round(((width + height) * 2 + 1) / rho);
-	
+
 	// Initialize and fill accumulator with zeros
 	int acc [num_rho][num_theta];
 	memset(acc, 0, num_rho*num_theta*sizeof(int));
@@ -62,9 +63,16 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 		}
 		image[i] = 0;
 	}
-
 	int count = vector_size(nzloc);
 
+	if (print)
+	{
+		FILE *file;
+		int t;
+		file = fopen("hough.pgm", "wb");
+		fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
+		fwrite(mdata0, width*height, 1, file);
+	}
 	for (; count > 0; count--)
 	{			
 		// PPHT Step 2: Randomly select pixel from input image.
@@ -277,6 +285,7 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 			
             if (vector_size(lines) >= linesMax)
             {
+            	angleBetweenLines(lines, 1, linesMax);
 				free(mdata0);
                 return;
 			}

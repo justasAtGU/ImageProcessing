@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     grayscale(image32, image8, width, height);
     //decimate(image8, &width, &height);
     detectEdgeCanny(image8, tempBuf, &width, &height);
-    houghTransform(image8, width, height, 1, 10, 1, 10, 1, PI/180);
+    houghTransform(image8, width, height, 1, 200, 30, 7, 1.0, PI/180, 20, 1);
     //dilate(image8, tempBuf, width, height);
     //erode(image8, tempBuf, width, height);
     /****************************************************************************/
