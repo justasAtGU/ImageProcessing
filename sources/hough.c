@@ -10,7 +10,7 @@
 #include "../includes/distance.h"
 
 void houghTransform(unsigned char* image, int width, int height, int thresh, int lineLength,
- int lineGap, int linesMax, int rho, int theta, int edge_thresh, int print)
+ int lineGap, int linesMax, int rho, int theta, int edge_thresh, int angle, int print)
 {	
 	// PPHT Step 1: Return if empty
 	if ((!image)) {
@@ -44,7 +44,7 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 	Line *lines = NULL;
 
 	// Collect edges	
-	Point *nzloc = NULL;
+	Point *edges = NULL;
 	for (int i = 0; i < width * height; i++)
 	{
 		// Filter out weaker edges again
@@ -54,7 +54,7 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 			Point temp;
 			temp.x = i % width;
 			temp.y = i / width;
-			vector_push_back(nzloc, temp);
+			vector_push_back(edges, temp);
 		}
 		else
 		{
@@ -62,7 +62,7 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 		}
 		image[i] = 0;
 	}
-	int count = vector_size(nzloc);
+	int count = vector_size(edges);
 
 	if (print)
 	{
@@ -76,12 +76,12 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 	{			
 		// PPHT Step 2: Randomly select pixel from input image.
 		pos = rand() % count;
-		Point point = nzloc[pos];
+		Point point = edges[pos];
 		int j = point.x;
 		int i = point.y;
 
 		// PPHT Step 3: Remove pixel, by overriding with last value
-		nzloc[pos] = nzloc[count - 1];
+		edges[pos] = edges[count - 1];
 		
         // Check if pixel has been excluded already
         if (!mdata0[i*width + j])
@@ -95,21 +95,12 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 		{
 			int rho_temp = round((j * trigtab[n*2].data) + (i * trigtab[n*2+1].data));
             rho_temp += (num_rho - 1) / 2;
-            //rho_temp = round((j * cos(n)) + (i * sin(n)));
 			int val = ++acc[rho_temp][n];
-            //printf("num_rho %d temp_rho %d num_theta %d n_theta %d\n", num_rho, rho_temp, num_theta, n);
-			//int val = 1;//acc[rho_temp][n]++;
-			// Round sin and cos for integer operations
-			//rho1 = (pixel_x * floor(A*cos(theta))) + (pixel_y * floor(A*sin(theta)));
-			//int rho1 = (pixel_x * cos(n)) + (pixel_y * sin(n));
-			//int val = acc[rho1][n]++;//++ before according to opencv?
-
-			// Update max if value in accumulator is higher
+			
 			if (max_value < val)
 			{
 				max_value = val;
 				max_theta = n;
-				//printf("rho %d max theta %d max value %d\n", rho_temp, max_theta, max_value);
 			}
 		}
 		
@@ -128,7 +119,7 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
         x0 = j;
         y0 = i;
         
-        if( fabs(a) > fabs(b) )
+        if (fabs(a) > fabs(b))
         {
             xflag = 1;
             dx0 = a > 0 ? 1 : -1;
@@ -168,11 +159,10 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
                 {
                     j1 = x >> shift;
                     i1 = y;
-
                 }
 
 				// Check if exceeding image bounds
-                if (j1 < 0 || j1 >= width || i1 < 0 || i1 >= height)
+                if (j1 < 0 || j1 >= width - 1 || i1 < 0 || i1 >= height)
                 {
                     break;
 				}
@@ -229,21 +219,15 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
                 }
 
                 mdata = mdata0 + i1*width + j1;
-                // for each non-zero point:
-                //    update line end,
-                //    clear the mask element
-                //    reset the gap
+
                 if (*mdata)
                 {
                     if (good_line)
                     {
                         for (int n = 0; n < theta; n++)
                         {
-
 							int rho_temp = round((j * trigtab[n*2].data) + (i * trigtab[n*2+1].data));
-                            rho_temp += (num_rho - 1) / 2;       
-							//rho_temp = round((j * cos(n)) + (i * sin(n)));
-                     
+                            rho_temp += (num_rho - 1) / 2;                            
                             acc[rho_temp][n]--;
                         }
                     }                    
@@ -267,11 +251,11 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 			line.p2.x = line_end[1].x;
 			line.p2.y = line_end[1].y;
 			vector_push_back(lines, line);			
+			drawLines(image, lines, width, height, print);
 
             if (vector_size(lines) >= linesMax)
             {
-				drawLines(image, lines, width, height, print);
-            	angleBetweenLines(lines, 1, linesMax, height);
+            	findCone(lines, (float)angle, linesMax, height, mdata0);
 				free(mdata0);
                 return;
 			}
@@ -281,6 +265,10 @@ void houghTransform(unsigned char* image, int width, int height, int thresh, int
 
 void drawLines(unsigned char* image, Line *lines, int width, int height, int print_file)
 {
+	if (!print_file)
+	{	
+		return;
+	}
 	// Draw all found lines
 	for (int i = 0; i < vector_size(lines); i++)
 	{
@@ -313,14 +301,13 @@ void drawLines(unsigned char* image, Line *lines, int width, int height, int pri
 			}
 		}
 	}
-	if (print_file)
-	{	
-		FILE *file;
-		int t;
-		file = fopen("lines.pgm", "wb");
-		fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
-		fwrite(image, width*height, 1, file);
-	}
+	
+	FILE *file;
+	int t;
+	file = fopen("lines.pgm", "wb");
+	fprintf(file, "P5 # %dus\n%d %d\n255\n", t, width, height);
+	fwrite(image, width*height, 1, file);
+
 }
 
 
